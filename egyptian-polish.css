@@ -1,0 +1,22 @@
+/* Egyptian Seal: restrained cinematic layout, no artwork overlays. */
+body{background:#090711!important;color:#f5e7cb!important;font-family:system-ui,"Microsoft JhengHei",sans-serif!important}
+header{height:78px!important;background:linear-gradient(180deg,#1c1429,#0c0913)!important;border:0!important;border-bottom:1px solid #927044!important;box-shadow:0 8px 30px #0008!important}
+main{max-width:1440px!important;margin:auto!important;padding:clamp(10px,2vw,28px)!important}
+.stage.v1-stage{position:relative;min-height:clamp(490px,76svh,850px);border:1px solid #987341!important;border-radius:8px;background:linear-gradient(180deg,#09061222,#09061255 65%,#090612cc),url('./v1.0/p01-temple-desktop.png') center/cover no-repeat!important;box-shadow:inset 0 0 65px #08051199,0 20px 60px #0008!important}
+.v1-stage:before{display:none!important}.temple-altar{display:none!important}
+.v1-stage .booth{gap:18px;filter:none!important}.v1-stage .foil{width:clamp(180px,23vw,270px);filter:drop-shadow(0 20px 18px #000b)!important}
+.v1-stage .booth:before{content:'';position:absolute;width:150%;height:28%;bottom:13%;left:-25%;border-radius:50%;background:radial-gradient(ellipse,#b88cff55,transparent 68%);pointer-events:none;animation:sealBreath 4s ease-in-out infinite alternate}
+@keyframes sealBreath{from{opacity:.35;transform:scale(.9)}to{opacity:.8;transform:scale(1.08)}}
+.v1-stage .arrival,.v1-stage .charge-fx,.v1-stage .release,.v1-stage .seal-flash{display:none!important}
+.v1-stage .gold,.v1-stage .cue,dialog button,.rotate-pack{background:linear-gradient(180deg,#352344,#160f23)!important;border:1px solid #b28a50!important;border-radius:5px!important;color:#f8e4ba!important;min-height:42px!important;padding:10px 24px!important;box-shadow:inset 0 1px #e6c58a33,0 5px 14px #0006!important;letter-spacing:.06em}
+.v1-stage .hand{gap:clamp(6px,1.5vw,22px);width:96%;margin:32px auto!important}
+.v1-stage .hand .slot{width:22%;max-width:235px;--angle:0deg;--lift:0px;border:1px solid #8c7049!important;border-radius:5px;padding:2px!important;background:#100c17!important;box-shadow:0 12px 24px #0009!important}
+.v1-stage .hand .slot>img{display:block;width:100%;height:auto;object-fit:contain;position:relative;z-index:5;filter:none!important;opacity:1!important}
+.v1-stage .slot.face .summon,.v1-stage .slot.face .sr,.v1-stage .slot.face .card-glint,.v1-stage .slot.face:before,.inspection .inspect-fx,.inspection .foil-light,.inspection .sr{display:none!important}
+.v1-stage .slot.face{filter:none!important;animation:none!important;isolation:isolate}.v1-stage .slot.rare{border-color:#e8c582!important;box-shadow:0 0 18px #d4a45055,0 12px 24px #0009!important}
+.v1-stage .hand.dealing .slot{animation:cleanDeal .65s var(--delay,0s) cubic-bezier(.16,.8,.25,1) both!important}
+@keyframes cleanDeal{from{opacity:0;transform:translate(var(--travel,0%),25%) scale(.55)}to{opacity:1;transform:none}}
+dialog{background:#100c18!important;border:1px solid #ad8954!important;border-radius:8px!important;box-shadow:0 20px 80px #000b!important}
+.inspection{background:none!important;border:0!important;padding:0!important}.inspection img{filter:none!important;opacity:1!important;object-fit:contain}
+@media(max-width:650px){header{height:62px!important}.stage.v1-stage{min-height:72svh;background-image:linear-gradient(180deg,#09061222,#09061288),url('./v1.0/p01-temple-mobile.png')!important}.v1-stage .foil{width:clamp(155px,48vw,220px)}.v1-stage .hand{gap:6px;flex-wrap:wrap}.v1-stage .hand .slot{width:43%;max-width:155px}.v1-stage .hand.dealing .slot{--travel:0%}}
+@media(prefers-reduced-motion:reduce){.v1-stage .booth:before,.v1-stage .hand.dealing .slot{animation:none!important}}
