@@ -1,0 +1,12 @@
+Cinematic fire atlas
+====================
+
+Source asset: "Seamless animated fire texture" / fluid_extras
+Author: zookeeper
+Source: https://opengameart.org/content/seamless-animated-fire-texture
+License: CC0 1.0 Universal (Public Domain Dedication)
+License text: https://creativecommons.org/publicdomain/zero/1.0/
+
+The bundled density and optical-flow atlases are processed derivatives of the
+source PNG sequence. Attribution is not required by CC0, but the origin is
+documented here for provenance.
