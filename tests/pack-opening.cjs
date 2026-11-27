@@ -92,7 +92,12 @@ function pageChecks(page) {
     if (response.status() >= 400) report.httpErrors.push([response.status(), response.url()]);
     if (response.request().resourceType() === 'image' && response.ok()) report.images.add(new URL(response.url()).pathname);
   });
-  page.on('requestfailed', request => report.failedRequests.push([request.failure().errorText, request.url()]));
+  page.on('requestfailed', request => {
+    const error = request.failure().errorText;
+    // Intentional reloads may cancel the optional background preview warmer.
+    if (error === 'net::ERR_ABORTED' && request.resourceType() === 'image' && /\/card-preview\/\d{2}\.webp(?:\?|$)/.test(request.url())) return;
+    report.failedRequests.push([error, request.url()]);
+  });
   return () => {
     assert.deepEqual(report.errors, []);
     assert.deepEqual(report.httpErrors, []);
