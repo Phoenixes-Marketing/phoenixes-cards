@@ -104,3 +104,6 @@
 
 ## V5.1.5（待驗收）
 - 保留 v3 素材，N外光116×112%、SR126×119%，face::after 固定細光沿原始直角 face；SR 外光 SVG turbulence/displacement scale9、3.6s，僅桌面>800px正常品質、已開包、當前正/反面，低品質/手機/reduced motion不套變形。保留既有明暗動畫。標章高度20%卡寬，左下各外移3%；footer桌面32px、手機28px最低安全邊距。未改抽卡及開包。SVG實際相容性、效能及光框貼合待實機驗收，若頓挫優先移除SVG filter。commit 78128bfc1d085eee765db72b81ca0aae5a6a57c5；回退 V5.1.4 blob e3c5c428f7b2eb343753d45f22110431d1c502f6。
+
+## V5.1.6（待驗收）
+- 手牌取消 N/SR 標章；保留內部 rank、抽卡及收藏邏輯，現有 1–19 SR、20–40 N 分組作為視覺類型代理。N 移除不貼合的 WebP，改用 face 精準銀白輪廓；SR 保留外側金紫圖，縮至 inset -7% -9%，固定白金輪廓，SVG scale18/2.8s，高品質桌面才使用，其他品質以 CSS 2.8s 位移伸縮持續動態，reduced motion 停用。圖鑑及預覽稀有度標題未改。外側素材實際貼合、動畫與效能待驗收。commit 594190bd487cb7dec000b3cc22522770a23900bd；回退 V5.1.5 blob 9995d712b1d023c277f59610269ae341431b9912。
