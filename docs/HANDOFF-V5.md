@@ -110,3 +110,6 @@
 
 ## V5.1.7（待驗收）
 - 實際檢視 sr-flame-v3.webp 640×928，目視核心直線約 x77–558、y105–854，依此校正外擴 left16%、right17%、top14%、bottom9.9%，非等比例置中。能量移至 face 前景 z4，screen 混合，保留原動態及固定輪廓。素材圓角與直角仍可能有落差，實際混合、貼合及效能待驗收。其他不變。commit d481bc4ad23e48cc5d36cfaec589cb8a3f939717；回退 V5.1.6 blob 4e86ed28e46cf4d41cbb0a96ce8d2c6114024da3。
+
+## V5.1.8（待驗收）
+- 使用者要求直接更新正式站，由使用者測試回饋。取消整層 scale/skew，保留 face-local 前置 screen；根據既有素材核心 x77–558、y105–854 計算，定位 left−13.37%、right−14.37%、top−11.12%、bottom−6.59%，核心目標左右內縮2%、上2.2%、下2.8%，固定金線同位置。SVG 單 octave，baseFrequency 2.8s 與 scale 12–17 / 3.7s 無限循環；移除品質等級切斷，所有裝置在非 reduced-motion 且已就定位、未開圖鑑時只對當前人物卡面啟用。飛行中所有輪廓透明、不套 filter，等待現有 opening 的全部 flights finished → zone.spent 後漸入 0.85s（輪廓0.65s）；不改飛行或抽卡流程。原圖內嵌光線仍可能局部扭曲；實際貼合、動畫連續及多卡效能待使用者實測。commit 3f17158264ec297735d222a5f058687c0b80b003；回退 V5.1.7 blob 153e7df17cd9d40dd8908d4e2f8a790e88480e4b。
