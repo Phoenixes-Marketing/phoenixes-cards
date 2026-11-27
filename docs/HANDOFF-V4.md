@@ -1,0 +1,33 @@
+# 封王卡牌遊戲 — V4 UI 開發交接
+更新：2026-11-27
+
+## 現況與基準
+- 正式網址：https://phoenixes-marketing.github.io/phoenixes-cards/
+- 主分支 main；核心程式 index.html（HTML/CSS/JS）。
+- 使用者已驗收 V3.11.18 開包視覺，表示效果很好、效能暫時可接受；未做獨立跨裝置效能測量。
+- 基準 commit: 139ead4c060388b58102a09b18f579af038b55c7
+- 備份分支 baseline/v3.11.18-final-opening；不要覆寫。
+- 下一階段 V4.0 UI，尚未開始修改 UI。
+
+## 已完成的功能與不可任意更動項目
+- 40 張卡、N/SR 兩種稀有度，現有卡池及抽卡機率不變。每包四張，每輪不重複；保留 localStorage phoenixes-portable、phoenixes-round。
+- 卡圖 cards/01.png 等；預覽 card-preview/01.webp 等，背面 00.webp。
+- 向上拖曳約三分之一螢幕開包，依起始位置調整距離；進度連續、可逆，未達門檻回彈；卡片上升與包裝下落連續銜接；橫向旋轉包裝、替代操作入口保留。
+- 四卡扇形、逐張翻牌及全部揭曉、SR 金色場景與手動退出；不新增音效。
+- 深紫星空、上方流動極光、下方慢速霧氣（已驗收鎖定）、地面旋轉法陣與粒子。背景在開包時仍流動。
+- assets/vfx-purple/：background、flow-a/b/c、mist、particles、flare WebP。
+- assets/pack-v39/：pack-front/back、pack-open-body、foil-mask/bump、inner-foil、tear-left/right、burst、energy-gold/purple、particles、rays WebP。保留原始包裝美術與 Logo。
+- 袋口金紫能量流使用 flow-a 與 mist 紋理的 WebGL shader；開包瞬間細緻放射光與粒子，光源在卡片後方。V3.11.16 縮小煙霧、局部 scissor 渲染；V3.11.17 再縮窄 15%、金白高光；V3.11.18 提升金紫色亮度及放射光/核心強度係數 20%，不增加渲染次數。
+- 保留現有自動畫質、預載、ResizeObserver 快取、背景/粒子暫停機制、行動裝置 viewport 鎖定與 pointer capture。桌面開包光效高畫質長邊上限 640px，手機 512px；實際 FPS 未獨立測量。
+- 先前手機包裝側邊紫色條紋曾嘗試修正 mask 合成；是否完全消失未獨立驗證。
+
+## V4 UI 方向
+先做抽卡首頁整體配置，再延伸頂部品牌、操作按鈕、收藏圖鑑、卡片詳細頁、抽卡結果及轉場。深紫/黑/金、高級卡牌遊戲質感，避免 UI 搶走卡包焦點。桌面與手機分別規劃，優先輕量 CSS，不新增不必要的 GPU 負擔。具體版面尚待使用者確認。
+不要因 UI 重構改動卡包動畫、背景、抽卡邏輯、收藏資料、素材或效能策略。必要的 DOM/CSS 變更須檢查選擇器與動畫依賴。保留正式版測試控制隱藏狀態。
+
+## 接手流程
+1. 讀本文件及 main 的 index.html，核對最新 commit；若文件落後，以實際程式和使用者最新確認為準。
+2. 對照 baseline/v3.11.18-final-opening，確認動畫及資料邏輯未遭破壞。
+3. 先確認 UI 設計方向，再逐項實作；測試桌面與手機、拖曳回彈、開包、翻牌、SR、收藏持久化及效能。
+4. 正式部署前取得使用者當前明確授權。提交成功不等於 Pages 已部署或已通過實機測試。
+5. 每階段更新本文件或後續開發紀錄，記錄 commit、變更範圍、驗收結果、待確認問題與下一步。不要將推論當成已驗證事實。
