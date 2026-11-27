@@ -1,0 +1,21 @@
+name: V5.3.0 isolated intro QA
+on:
+  push:
+    branches:
+      - codex/v5.3.0-intro-integration
+permissions:
+  contents: read
+jobs:
+  intro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --no-package-lock playwright
+      - run: npx playwright install --with-deps chromium
+      - run: |
+          python3 -m http.server 8394 --bind 127.0.0.1 >/tmp/phoenixes-http.log 2>&1 &
+          node tests/intro-integration.cjs
