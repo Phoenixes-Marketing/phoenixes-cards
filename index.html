@@ -440,8 +440,7 @@ main>footer:not(#status){flex-wrap:nowrap;justify-content:space-between;gap:8px}
 @media(max-width:600px){main>header>.brand-logo{width:88px;height:44px}main>footer:not(#status){padding-right:max(24px,calc(env(safe-area-inset-right) + 12px))}.footer-edition{font-size:9px;letter-spacing:.65px}}
 @media(max-width:340px){.footer-edition{font-size:8px;letter-spacing:.2px}}
 /* V5.1.1 preview-only material; lab A */
-.hero .inner::before{content:"";position:absolute;inset:0;transform:translateZ(-3px);background:linear-gradient(120deg,#c9c0ad,#59534d 52%,#bcb2a3);pointer-events:none;backface-visibility:hidden}
-.hero.open .inner::before{transform:translateZ(-3px) rotateY(180deg)}
+.hero .tilt::before{content:"";position:absolute;inset:0;transform:translateZ(-3px);background:linear-gradient(120deg,#c9c0ad,#59534d 52%,#bcb2a3);pointer-events:none;backface-visibility:hidden}
 .hero .face.front{isolation:isolate;border-radius:0}
 .hero .v51-foil,.hero .v51-coat{position:absolute;pointer-events:none}
 .hero .v51-foil{left:12.2%;top:18.4%;width:75.6%;height:51.8%;background:repeating-linear-gradient(var(--v51-angle,161deg),#ff96ae,#f8e6a0 10%,#83e7b9 20%,#9ab8ff 30%,#d6a2f5 40%,#ff96ae 50%);background-size:240% 240%;background-position:var(--v51-x,50%) var(--v51-y,50%);mix-blend-mode:soft-light;opacity:.66}
