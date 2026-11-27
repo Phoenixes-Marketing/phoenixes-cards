@@ -2,7 +2,7 @@
 更新：2026-11-27
 
 ## 基準與狀態
-- V4.0.14 已由使用者實機驗收，指定目前最成功版本；灰底已消失。V5.0.7 已提交 main，正式網站部署及使用者驗收待確認。
+- V4.0.14 已由使用者實機驗收，指定目前最成功版本；灰底已消失。V5.0.8 已提交 main，正式網站部署及使用者驗收待確認。
 - Repo Phoenixes-Marketing/phoenixes-cards，main，核心 index.html。正式網站 https://phoenixes-marketing.github.io/phoenixes-cards/ 。
 - 鎖定 commit efbafccca714d4d0353df39bdd9ece03397d2c6d；備份 baseline/v4.0.14-final-ui，不覆寫。完整歷史 docs/HANDOFF-V4.md。
 
@@ -47,3 +47,8 @@
 - V5.0.6 commit 29938c0efaa3a029077ceb4d0902f4af9b98b82b：按住未揭曉卡橫掃，12px水平門檻，事件式命中與去重佇列，N沿用 reveal，SR清空佇列並進入原揭曉流程；取消/放開/失焦處理，保留單點及全部揭曉。手機 pan-y，待實機驗證。
 - V5.0.7 commit 32dabcae23d7284006162803f1583f0fbcb42319：既有兩片封口素材加入進度連動的 CSS 3D 彎折姿態及撕離中間影格；非真正多段網格物理捲曲。保留向上開包、原回彈、能量及素材。未移植 PRISM 程式碼或資產，僅參考概念；未新增常駐迴圈、Canvas、粒子或依賴。
 - 各版本獨立 commit，V5.0.4 復原點 b54bc872dd4d2e35e2abdb8538d7141ed37e832d。部署、JS瀏覽器執行、手機/桌面、橫掃SR中斷、連抽、FPS均待驗收；V4基準不覆寫。
+
+## V5.0.8（待驗收）
+- 使用者確認 V5.0.5 飛入時間差改善；V5.0.6 橫掃未成功且 SR 頻繁中斷，V5.0.7 鋁箔受力不明顯，要求先撤回兩項。以 V5.0.5 index.html 為基礎恢復，保留450ms場外轉向及原開包效果。
+- commit c415b0535bfe882f7c339f2c31a69cc0a3117ecf。漂浮選擇器移除 :not(.open)，翻牌前後持續 CSS translate；hover 同樣適用。桌面幅度10–14.5px、依卡寬上限8.5%響應式縮減；週期3.4–4.81秒。低品質幅度5–6.5px、5.6秒；reduced motion 停用，圖鑑開啟暫停。無新增常駐JS或素材。
+- title/footer V5.0.8；V5.0.7 復原點 32dabcae23d7284006162803f1583f0fbcb42319。部署、漂浮/翻牌/SR回歸、FPS待實機驗收。V4基準不覆寫。
