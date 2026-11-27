@@ -59,3 +59,7 @@
 ## V4.0.5（2026-11-27）
 - Commit b05c4ab27f0e568748624796a440db590741c395：箭頭降低、前置及縮短飄動；按鈕 CSS 留白試修；圖鑑雙層金屬框與單一 transform/opacity 高光，低品質與背景暫停、尊重 reduced-motion；中低品質減少近景霧，低品質保留一層光流與一層霧的 CSS 動畫，WebGL 跳過 display:none 圖層。保留 SR 場景及手動關閉沉浸效果的原有行為。
 - 尚未實際壓縮神殿 WebP 或修復按鈕原始 alpha，未加入預載；待後續素材處理。未確認下一包消失根因，Pages、手機、安全距離、光暈、FPS 與連續開包待驗收。title/footer 已同步 V4.0.5；可回復 V4.0.4。
+
+## V4.0.6（2026-11-27）
+- Commit 58a7fa272e884533bca40cf7a760ea6ae6f5aca9：圖鑑加入單層既有 mist.webp、8 個 CSS 光粒、上下 5px 金白高光；低品質停煙霧/上框動畫並隱藏光粒及下框高光，尊重 reduced-motion。圖鑑開關新增 collection-open 狀態，暫停抽卡舞台 CSS 與符合條件的背景 WebGL/餘燼迴圈。刻度固定降低 opacity 與色彩亮度，保留旋轉。按鈕使用靜態漸層補光試修。
+- 原始 WebP alpha 修復、神殿壓縮與預載尚未完成；未驗證全部渲染迴圈、圖鑑實際可見效果、閃爍與 FPS。title/footer 更新 V4.0.6；可回復 V4.0.5。未改抽卡機率與收藏邏輯。
