@@ -74,3 +74,6 @@
 
 ## V5.0.12（待驗收）
 - 使用者確認 SR 揭曉改善，一般預覽仍有尺寸回跳。commit 4612e00580dd6bf160fb30ecb9424fe537e07f8b：一般預覽改固定最終尺寸220ms淡入，延後初始滑鼠透視至實際移動；保留 SR 揭曉、縮放與其他效果。透視為推定原因，實機待確認。V5.0.11 復原點 442c3e0a70b80dcead8b4ad465d05dbf6f9deb5a。
+
+## V5.0.13（待驗收）
+- commit d3119f6af94371e6ff9c3fc5e6e66d62779cd8d6。定位到 Work 的 syncPreviewLayout 由 class/message MutationObserver 延後重算，manual() 才填說明造成尺寸變動。改進場前填文字並同步測量，移除該 observer，保留 resize/visualViewport resize；N 不預留隱藏 SR 標題。手機 footer 左側至少24px且考慮安全區，右側至少16px。保留 V5.0.12 固定尺寸淡入及 SR 動畫。實機待確認；V5.0.12 復原點 4612e00580dd6bf160fb30ecb9424fe537e07f8b。
