@@ -2,7 +2,7 @@
 更新：2026-11-27
 
 ## 基準與狀態
-- V4.0.14 已由使用者實機驗收，指定目前最成功版本；灰底已消失。V5.0.8 已提交 main，正式網站部署及使用者驗收待確認。
+- V4.0.14 已由使用者實機驗收，指定目前最成功版本；灰底已消失。V5.0.9 已提交 main，正式網站部署及使用者驗收待確認。
 - Repo Phoenixes-Marketing/phoenixes-cards，main，核心 index.html。正式網站 https://phoenixes-marketing.github.io/phoenixes-cards/ 。
 - 鎖定 commit efbafccca714d4d0353df39bdd9ece03397d2c6d；備份 baseline/v4.0.14-final-ui，不覆寫。完整歷史 docs/HANDOFF-V4.md。
 
@@ -52,3 +52,8 @@
 - 使用者確認 V5.0.5 飛入時間差改善；V5.0.6 橫掃未成功且 SR 頻繁中斷，V5.0.7 鋁箔受力不明顯，要求先撤回兩項。以 V5.0.5 index.html 為基礎恢復，保留450ms場外轉向及原開包效果。
 - commit c415b0535bfe882f7c339f2c31a69cc0a3117ecf。漂浮選擇器移除 :not(.open)，翻牌前後持續 CSS translate；hover 同樣適用。桌面幅度10–14.5px、依卡寬上限8.5%響應式縮減；週期3.4–4.81秒。低品質幅度5–6.5px、5.6秒；reduced motion 停用，圖鑑開啟暫停。無新增常駐JS或素材。
 - title/footer V5.0.8；V5.0.7 復原點 32dabcae23d7284006162803f1583f0fbcb42319。部署、漂浮/翻牌/SR回歸、FPS待實機驗收。V4基準不覆寫。
+
+## V5.0.9（待驗收）
+- 使用者確認 V5.0.8 卡牌漂浮效果可接受，回報定位後背景視覺斷差。保留卡牌及開包動畫。
+- commit 1c220a04862b507a181f1a4ec2e48ed7aae82058：背景 WebGL 各圖層改用獨立渲染時鐘，暫停時不累積時間，恢復每次最多前進60ms；保留原更新頻率、開包/低品質圖層跳過策略。開包期間活躍圖層相位推進較慢，無新增渲染迴圈或素材。此為程式推定原因，實機斷差及FPS待驗證。
+- V5.0.8 復原點 c415b0535bfe882f7c339f2c31a69cc0a3117ecf。
