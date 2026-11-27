@@ -101,3 +101,6 @@
 
 ## V5.1.4（待驗收）
 - 使用者確認 v3 四張 AI 美術素材，Git tree 確認 assets/ui/{rarity-n-v3,rarity-sr-v3,n-edge-v3,sr-flame-v3}.webp 存在。N銀紫、SR金紫 face-local 靜態圖，初始貼合比例 N121×117%、SR133×124%，移除舊 drop-shadow；SR漂浮時僅 opacity 2.8s 呼吸，低品質及 reduced-motion 停用，並非真實火焰流動。標章左下角同 CSS 高度15.5%卡寬，無副標；頁尾三欄保留，Cinzel + Noto Serif TC 以 Google Fonts 字元子集非阻塞載入，具本機 fallback。未改開包或抽卡。commit f8c3477c7faea07cecf26e5a82433b16df095cce；貼合、實際字型載入、手機與效能及部署待驗收。回退 V5.1.3 index blob 247f33f899015f9390c217821948594207fece42。
+
+## V5.1.5（待驗收）
+- 保留 v3 素材，N外光116×112%、SR126×119%，face::after 固定細光沿原始直角 face；SR 外光 SVG turbulence/displacement scale9、3.6s，僅桌面>800px正常品質、已開包、當前正/反面，低品質/手機/reduced motion不套變形。保留既有明暗動畫。標章高度20%卡寬，左下各外移3%；footer桌面32px、手機28px最低安全邊距。未改抽卡及開包。SVG實際相容性、效能及光框貼合待實機驗收，若頓挫優先移除SVG filter。commit 78128bfc1d085eee765db72b81ca0aae5a6a57c5；回退 V5.1.4 blob e3c5c428f7b2eb343753d45f22110431d1c502f6。
