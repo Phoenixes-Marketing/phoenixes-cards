@@ -25,3 +25,8 @@
 - 使用者同意直接更新 main，不另建測試站。修改 commit 23d04b9dd82e1ddc57232b2402451f83c37b36ff；修改前 main 與基準分支 index.html blob 均為 84afb4a80781743fa28e4ccf777a6064ce816760。
 - C 方案：垂直抽離、左右螺旋式曲線、右上離場、右側回歸；CSS transform 關鍵影格 2.28 秒，125ms 列隊間隔，由右側位置先定位，依序往左補齊。未翻牌 body 浮動 5px，4.1–5.39 秒，低品質及 reduced motion 停用。
 - 未新增粒子、Canvas、素材；保留開包與抽卡邏輯。title/footer 同步 V5.0.1。軌跡為分段 CSS 插值，連續性、卡牌重疊、手機/桌面與 FPS 尚未實機驗證。使用者不滿意可 revert 上述修改 commit，基準分支不覆寫。
+
+## V5.0.2（待驗收）
+- 使用者批准直接更新 main。程式 commit 4cd6e358d7a154a35487891db6b90b34009f3563；上一版復原點 23d04b9dd82e1ddc57232b2402451f83c37b36ff。
+- 五段切線方向連續的 cubic Bezier，預算 97 個 transform keyframes/卡，WAAPI 播放 2380ms、145ms 間隔；卡頂追蹤切線、角度展開、最後16%轉正，縮放最遠 .42。段間速度仍需實測。
+- 未翻牌 body 使用獨立 translate 漂浮，hover transform 上抬15px/1.04倍；低品質與 reduced motion 保留停止漂浮。未增加粒子、Canvas 或逐幀 JS 迴圈。title/footer V5.0.2。部署、FPS、實際視覺及回歸待驗收。
