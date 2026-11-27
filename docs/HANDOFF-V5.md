@@ -206,3 +206,8 @@
 - 開場先遮罩防閃白，並行預載背景、Logo、按鈕、卡包正面／光澤、卡背；正常 2.3 秒時間軸、素材等待最多 2800ms、6500ms fail-open 保險。原有暗場透光、印記、卡包上浮、UI 浮現順序；點擊或 Escape/Enter/空白略過，main inert 防穿透，結束取消開場動畫、移除遮罩及鍵盤事件。Reduced motion 150ms 淡入。未新增持續渲染或外部素材。
 - 隔離測試分支 codex/v5.3.0-intro-integration，候選 commit 93fa829a831e7541da49a8e9a7a5fc9b01970199，GitHub Actions 46039478262 已 success，實際 Chromium 159 桌面1366×850與手機觸控模擬390×844：首進含素材等待 3667.4/2346.9ms；重入、點擊略過、鍵盤略過、圖鑑、抽卡皆通過、pageerror 0；reduced motion、延遲3500ms且背景載入失敗 fail-open 亦通過。八段 script 語法通過。測試使用隔離收藏資料。實體 iPhone Safari、視覺細節及新開場 FPS 未實測。
 - 使用者授權測試通過後正式發布；main 程式 commit 059411f92fd444fe9324bbbda8ce8de2ae09c1a7 / blob 9f7dcda57e1dbcd57bf6e3ea5cd8bccc2a0c7176，與已測候選完全一致。測試腳本及獨立 CI 保留於候選分支，未加入 main。回退 V5.2.7 blob b6e44e14cff2e2e79e88c2914448a795b4f17fc7；V5.2.2 FINAL 與 V5.2.5 保存分支不動。
+
+## V5.3.1（2026-11-28 開場文字及非阻塞卡片檢視，待實機驗收）
+- 開場原先「點一下略過／載入舞台中」改為固定 `Duel Start.`，暖金色 Georgia serif 17–23px，保留點擊／鍵盤略過、ARIA、2.3秒時間軸、素材等待上限及 reduced motion。不新增動畫或素材。
+- 已揭曉卡片（手牌及圖鑑共用 preview）移除登場前 await warmFull；init 直接使用既有預覽圖或快取原圖，非同步解碼完成再切換完整 PNG。既有 600ms 入場及 450ms 返回、旋轉縮放、SR 手動登場、自動揭曉 420/200ms、畫質、收藏及快取上限不變。原圖未快取時入場期間可能短暫顯示預覽圖；解碼與入場並行的實際慢幀需實測。
+- 八段 script 語法檢查通過；未完成解碼時立即觸發 600ms transition 的模擬測試通過。未執行本版真實瀏覽器回歸或實機測量。程式 commit 9fa698eabd2eea5546e47dd9d0bf56d55c9b236e / blob c6d9d1116c2db5d8fd9a39630ceb389d486ff6a8；回退 V5.3.0 blob 9f7dcda57e1dbcd57bf6e3ea5cd8bccc2a0c7176；完成基準分支不動。
