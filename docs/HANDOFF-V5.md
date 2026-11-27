@@ -67,3 +67,7 @@
 - 開包前後量測：桌面 p95 7ms、最慢 7ms；390×844 p95 7ms、最慢 14ms，皆 0 個 >34ms 慢幀。十包桌面與觸控模擬皆取得 40 ID／37 款並於刷新後保留收藏；暫態粒子物件歸零、Canvas 固定 9、文件固定 1。垃圾回收後 JS heap：桌面 1.41→3.19MB，刷新並顯示 40 張圖鑑後 1.96MB；手機 1.45→3.22MB，刷新後 1.99MB，未見持續累積證據。
 - 有快取的本機伺服器首次載入約 0.8 秒／約 4.57MB 傳輸；同分頁重載約 0.18 秒／19 個資源全數命中快取、資源傳輸 0KB。完整 PNG 1000×1450，預覽未裁切、未拉伸；未用降解析度或隱藏特效換取數據。
 - 本機證據位於工作目錄外 `C:\Users\xxian\Documents\ChatGPT\phoenixes-cards-qa-v510-final`；正式站證據位於 `C:\Users\xxian\Documents\ChatGPT\phoenixes-cards-qa-v510-production`。GitHub Pages run 45990124408、deployment 8108543463 成功；正式 title/footer 為 V5.0.10，線上 index blob 與提交一致。正式站桌面／手機模擬／矮螢幕／低品質／reduced-motion／鍵盤及各十包 40 ID／37 款回歸通過，無 console、HTTP 或請求錯誤。手機仍為 Chromium 觸控模擬及 463×574 可視瀏覽器檢查，不代表實體手機或 Safari；使用者實機驗收待確認。
+
+## V5.0.11（待驗收）
+- 以 Work 優化後 V5.0.10 blob d31cb865a4fd6e36c0f047ed3994411a864a974d 為基礎。使用者要求 Chat 微調 SR 翻面及一般預覽尺寸斷差。
+- commit 442c3e0a70b80dcead8b4ad465d05dbf6f9deb5a：SR蓄力終點由104%改100%，heroTransition等待WAAPI finished後取消，單調無超越緩動，預覽250→300ms，SR返回重新測量浮動卡片位置。保留Work預覽尺寸、縮放、抽卡及其他特效。無新增常駐迴圈。部署與實機驗收待確認。
