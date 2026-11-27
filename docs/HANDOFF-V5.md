@@ -98,3 +98,6 @@
 
 ## V5.1.3（待驗收）
 - 使用者已上傳三個 WebP，Git tree 確認存在。SR 正反 face 附著靜態火焰圖，初始 inset -8%，白金核心 drop-shadow；移除舊 SR 手牌環境動畫，標章於 commit 後顯示並跟隨 body 漂浮，寬40% 高16%卡寬。footer 三欄同字級同色，收藏置中，手機安全邊距。無新動畫迴圈。火焰貼合與素材實際視覺比例、部署及效能待實機驗收。commit 7ceb7372b0b308814f331470f46856ca0c766a70
+
+## V5.1.4（待驗收）
+- 使用者確認 v3 四張 AI 美術素材，Git tree 確認 assets/ui/{rarity-n-v3,rarity-sr-v3,n-edge-v3,sr-flame-v3}.webp 存在。N銀紫、SR金紫 face-local 靜態圖，初始貼合比例 N121×117%、SR133×124%，移除舊 drop-shadow；SR漂浮時僅 opacity 2.8s 呼吸，低品質及 reduced-motion 停用，並非真實火焰流動。標章左下角同 CSS 高度15.5%卡寬，無副標；頁尾三欄保留，Cinzel + Noto Serif TC 以 Google Fonts 字元子集非阻塞載入，具本機 fallback。未改開包或抽卡。commit f8c3477c7faea07cecf26e5a82433b16df095cce；貼合、實際字型載入、手機與效能及部署待驗收。回退 V5.1.3 index blob 247f33f899015f9390c217821948594207fece42。
