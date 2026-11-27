@@ -200,3 +200,9 @@
 - 全部揭曉統一翻面 420ms、啟動間隔 200ms（原 320/140ms）；單張 N 仍 550ms，桌面與手機共用 duration，手機單平面翻面與收藏不變。
 - 單張 SR 登場前原先 await warmFull(c.id) 會阻塞，移除這個 await；init 已使用快取/預覽圖並非同步解碼升級原始高畫質 PNG，因此立即開始原有 400ms 登場動畫，後續蓄光、翻面、返回保留。一般已揭曉卡片檢視的預解碼策略不改。未降低畫質或調整粒子、背景、GPU 設定；解碼改與登場重疊，實際慢幀影響需實測。
 - 五段 script 語法檢查與未完成解碼時立即觸發登場動畫的模擬測試通過。未測實際瀏覽器。程式 commit 6ecd65a577139d77a666ced84123705973d10c20 / blob b6e44e14cff2e2e79e88c2914448a795b4f17fc7；回退 V5.2.6 blob 460dd01a1d24e4303ee409b4c8d9ab3c8662726a；V5.2.2 FINAL 保存分支不動。
+
+## V5.3.0（2026-11-28，正式開場動畫）
+- 使用者確認所有網頁初次開啟與重新整理均採 2.3 秒原型；圖鑑、預覽、下一包、切回分頁不重播。沿用 V5.2.7，不改卡牌、粒子、畫質、機率及收藏。參考原型 codex/intro-2.3s-prototype commit 37c9187028fd7662a51595fa346bceb371c51130。
+- 開場先遮罩防閃白，並行預載背景、Logo、按鈕、卡包正面／光澤、卡背；正常 2.3 秒時間軸、素材等待最多 2800ms、6500ms fail-open 保險。原有暗場透光、印記、卡包上浮、UI 浮現順序；點擊或 Escape/Enter/空白略過，main inert 防穿透，結束取消開場動畫、移除遮罩及鍵盤事件。Reduced motion 150ms 淡入。未新增持續渲染或外部素材。
+- 隔離測試分支 codex/v5.3.0-intro-integration，候選 commit 93fa829a831e7541da49a8e9a7a5fc9b01970199，GitHub Actions 46039478262 已 success，實際 Chromium 159 桌面1366×850與手機觸控模擬390×844：首進含素材等待 3667.4/2346.9ms；重入、點擊略過、鍵盤略過、圖鑑、抽卡皆通過、pageerror 0；reduced motion、延遲3500ms且背景載入失敗 fail-open 亦通過。八段 script 語法通過。測試使用隔離收藏資料。實體 iPhone Safari、視覺細節及新開場 FPS 未實測。
+- 使用者授權測試通過後正式發布；main 程式 commit 059411f92fd444fe9324bbbda8ce8de2ae09c1a7 / blob 9f7dcda57e1dbcd57bf6e3ea5cd8bccc2a0c7176，與已測候選完全一致。測試腳本及獨立 CI 保留於候選分支，未加入 main。回退 V5.2.7 blob b6e44e14cff2e2e79e88c2914448a795b4f17fc7；V5.2.2 FINAL 與 V5.2.5 保存分支不動。
