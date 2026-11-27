@@ -132,3 +132,7 @@
 
 ## V5.1.14（待驗收）
 - 使用者明確認可 V5.1.13 為截至當時最佳效果，保留為視覺基準：程式 commit 1dfdaf69ee609a46b8b163eb9d524ca99658e231 / blob 279bc9daf9262383846592c20712df1e82114dab。金框及平滑火焰已獲正面回饋，後續不動。銀框維持2px、radius3px、inset 1% .3%，核心改 rgba(242,236,255,.84)、近光3px rgba(249,245,255,.68)、外光12px rgba(194,172,255,.60)，改善灰筆刷感且不新增圖層。金框、動畫、預覽及抽卡機制完全保留。commit e956251d872bd4f589c986a0a3dd4895af6a7065；回退 V5.1.13 blob 如上。後續規劃人物卡展示背景（rays/halo/ribbon），尚未修改。實際銀框與部署待驗收。
+
+## V5.1.15（緊急修正，待實機驗收）
+- 使用者回報 V5.1.14 預覽轉動嚴重卡頓、返回手牌顯示背面。可能原因為 SVG filter/混合與雙面 3D 合成衝突，未獨立重現。settleHandFace 於 commit/summon 回程固定 open+revealed-flat；已揭曉 slot 直接顯示前面、隱藏背面，不再使用 180° 雙面合成；preview/manual 同樣固定 preview-flat，保留外層 tilt；preview finally 依 seen 恢復正面。close 清除待執行 RAF/光效計時；修正被註解吞掉的 resize listener。
+- 保留 v3 紋理/輪廓與漸入，前景 aura 改正常 alpha 混合；高品質桌面已就定位才跑 SVG 波形，預覽操作期間暫停位移 280ms，手牌在預覽中暫停漂浮與 filter；手機/低中品質使用靜態紋理、手機停用舊 preview sweep/spectrum/metal，取捨流動動畫以保操作穩定。未量測 FPS。手機 header 68px/footer 42px、頁尾左右38px（窄機30px）與 safe area、按鈕/Logo垂直置中，操作按鈕上移避免 footer，保留字體及抽卡邏輯。commit d4233c0b6a8a9495aa57b18ad0c27309e2f44dce；回退 V5.1.14 blob a274024a4cf6e768190b841555915555510dffc2。手機 Safari 與桌面實際正面恢復、旋轉、畫質和部署均待驗收，V5.2 暫停。
