@@ -77,3 +77,7 @@
 
 ## V5.0.13（待驗收）
 - commit d3119f6af94371e6ff9c3fc5e6e66d62779cd8d6。定位到 Work 的 syncPreviewLayout 由 class/message MutationObserver 延後重算，manual() 才填說明造成尺寸變動。改進場前填文字並同步測量，移除該 observer，保留 resize/visualViewport resize；N 不預留隱藏 SR 標題。手機 footer 左側至少24px且考慮安全區，右側至少16px。保留 V5.0.12 固定尺寸淡入及 SR 動畫。實機待確認；V5.0.12 復原點 4612e00580dd6bf160fb30ecb9424fe537e07f8b。
+
+## V5.0.14（待驗收）
+- 使用者確認 V5.0.13 預覽改善，2K 全螢幕效能暫不處理。使用者上傳 assets/ui/phoenixes-logo.webp（30268 bytes），要求替換左上文字並將 INTERNAL EDITION 移至右下。
+- commit 4518371fa8546428fabec64c3ae3ae60682147ed：Logo 桌面108×48、手機88×44 CSS 容器，contain 等比例，維持按鈕與 header 高度；footer 左版本收藏、右 edition，手機左右至少24px安全邊距。無新增動畫。V5.0.13 復原點 d3119f6af94371e6ff9c3fc5e6e66d62779cd8d6。部署與實機待驗收。
