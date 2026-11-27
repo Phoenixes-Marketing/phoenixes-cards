@@ -119,3 +119,7 @@
 
 ## V5.1.10（待驗收）
 - 使用者認可 V5.1.9 整體方向，回報人物光效磨砂感及銀線太細。SVG noise baseFrequency 7/16→3/8，displacement scale .023→.014，保留 stitchTiles、單向1.85s循環及柔邊遮罩；磨砂原因為推測。雙類型固定光框四側 inset .5%；SR 素材依既有目視核心校正 left−15.35%、right−16.37%、top−13.38%、bottom−9.28%。銀線1→2px，提亮白色及冷紫外暈，SR 固定線維持原強度。手牌與 hero 共用；飛行不顯示、就位漸入、zoom>1 隱藏皆保留。未改其他機制。commit 0a40cd22d2c20d6e497fd24678a43ec1e8dce0a1；回退 V5.1.9 blob 003da51a577090e20abc7d90defdb81cccb8c24d。實際質感、貼合、循環及效能待使用者驗收。
+
+## V5.1.11（待驗收）
+- 使用者要求固定輪廓上下內縮1%、左右0.3%，銀白與白金核心皆3px，預覽不顯示 SR/N。沿用素材核心 x77–558/y105–854 對應定位，left -15.61%、right -16.65%、top -12.74%、bottom -8.68%。
+- 將噪聲位移替換為內嵌32×32週期平滑正弦雙通道 PNG（無額外請求），SVG feImage/feTile/feOffset 單向1.85s循環、GaussianBlur .009/.006、scale .016；目標減少磨砂，實際 SVG 相容性及效果未驗證。保留原圖及遮罩、飛行後漸入、zoom>1隱藏、背景手牌暫停運算。預覽標題 visibility:hidden + aria-hidden，保留原預覽幾何，圖鑑未改。commit 064c8b3aad89e6666f16c0ba341fd64be0881c32；回退 V5.1.10 blob ef60bb6660fdbc6463f5325731fedcb3007f6c2f。
