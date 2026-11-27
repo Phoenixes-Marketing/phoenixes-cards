@@ -113,3 +113,6 @@
 
 ## V5.1.8（待驗收）
 - 使用者要求直接更新正式站，由使用者測試回饋。取消整層 scale/skew，保留 face-local 前置 screen；根據既有素材核心 x77–558、y105–854 計算，定位 left−13.37%、right−14.37%、top−11.12%、bottom−6.59%，核心目標左右內縮2%、上2.2%、下2.8%，固定金線同位置。SVG 單 octave，baseFrequency 2.8s 與 scale 12–17 / 3.7s 無限循環；移除品質等級切斷，所有裝置在非 reduced-motion 且已就定位、未開圖鑑時只對當前人物卡面啟用。飛行中所有輪廓透明、不套 filter，等待現有 opening 的全部 flights finished → zone.spent 後漸入 0.85s（輪廓0.65s）；不改飛行或抽卡流程。原圖內嵌光線仍可能局部扭曲；實際貼合、動畫連續及多卡效能待使用者實測。commit 3f17158264ec297735d222a5f058687c0b80b003；回退 V5.1.7 blob 153e7df17cd9d40dd8908d4e2f8a790e88480e4b。
+
+## V5.1.9（待驗收）
+- 使用者確認 V5.1.8 改善，要求人物/魔法陷阱光框左右內縮1%、上下2%；沿用素材核心座標校正前置光圖 left−14.69%、right−15.71%、top−11.46%、bottom−7.48%，固定細光 inset 2% 1%。以柔邊 CSS mask 收斂火焰外擴；SVG stitchTiles/feTile/feOffset 將位移雜訊單方向向上平移一個週期(.25 bbox)，1.85s 線性無限循環，scale .023 bbox，不再來回變頻/變幅。實際瀏覽器無縫程度及效能待驗收。hero manual 就位後 aura-ready 漸入，zoom>1 隱藏並停用 filter，關閉先移除 aura-ready，手牌在預覽遮蔽時不跑 SVG。未改開包、抽卡、收藏、既有頁尾。commit d81d2ebb9fa04e48460f9436532633025b5439b2；回退 V5.1.8 blob 6fd18655cf1a12cc48aecb7f72ee54e5d52bc5ca。
