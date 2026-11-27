@@ -2,7 +2,7 @@
 更新：2026-11-27
 
 ## 基準與狀態
-- V4.0.14 已由使用者實機驗收，指定目前最成功版本；灰底已消失。V5 尚未開始，正式網站仍顯示 V4.0.14。
+- V4.0.14 已由使用者實機驗收，指定目前最成功版本；灰底已消失。V5.0.1 已提交 main，正式網站部署及使用者驗收待確認。
 - Repo Phoenixes-Marketing/phoenixes-cards，main，核心 index.html。正式網站 https://phoenixes-marketing.github.io/phoenixes-cards/ 。
 - 鎖定 commit efbafccca714d4d0353df39bdd9ece03397d2c6d；備份 baseline/v4.0.14-final-ui，不覆寫。完整歷史 docs/HANDOFF-V4.md。
 
@@ -20,3 +20,8 @@
 2. 與使用者確認 V5.0 第一項設計及完成標準，取得當前提交授權後才修改 GitHub。每次同步 title/footer、commit 與交接紀錄。
 3. 分小版本驗收：卡牌出場、文字、漂浮、翻牌/預覽、N/SR 展示及下一包銜接；桌面/手機連續抽卡回歸測試。
 4. 不將提交視為部署成功；由使用者實機驗收。FPS 未獨立量測、神殿壓縮與預載未完成，灰底根因未獨立驗證；非 V5 必做項目。
+
+## V5.0.1（待驗收）
+- 使用者同意直接更新 main，不另建測試站。修改 commit 23d04b9dd82e1ddc57232b2402451f83c37b36ff；修改前 main 與基準分支 index.html blob 均為 84afb4a80781743fa28e4ccf777a6064ce816760。
+- C 方案：垂直抽離、左右螺旋式曲線、右上離場、右側回歸；CSS transform 關鍵影格 2.28 秒，125ms 列隊間隔，由右側位置先定位，依序往左補齊。未翻牌 body 浮動 5px，4.1–5.39 秒，低品質及 reduced motion 停用。
+- 未新增粒子、Canvas、素材；保留開包與抽卡邏輯。title/footer 同步 V5.0.1。軌跡為分段 CSS 插值，連續性、卡牌重疊、手機/桌面與 FPS 尚未實機驗證。使用者不滿意可 revert 上述修改 commit，基準分支不覆寫。
