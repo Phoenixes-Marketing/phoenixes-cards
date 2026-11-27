@@ -144,3 +144,7 @@
 ## V5.1.17（待驗收）
 - 使用者確認 V5.1.16 暫無重大問題，作為穩定基準（commit 00a3fc4287de29cec9d0987e25a78dc1de647800 / blob 43596a7301d29a11abc2c0c1c53a89db1e34176b）。回報預覽鏡面反光消失或溢出。程式確認 face overflow visible、舊 spectrum/metal inset−70%，且 V5.1.15 interaction/mobile 停用舊材質。
 - 僅 preview card(c,true) 換為獨立 card-reflection 裁切容器（inset0/overflow hidden/z2），單層銀白或暖白線性漸層，沿既有 track RAF 的 --fx/fy/fr 移動、tracking 時淡入 .62、停止追蹤淡出；不使用 mix-blend、SVG filter 或自動 sweep，不加動畫迴圈。手機/桌面皆可用，zoom>1 隱藏，外側光框不裁切。保留單面修正、手機 N 翻面、光效效能策略、UI 及抽卡收藏；V5.2 背景尚未修改。commit dfaab1e095514342e46550737d73002fe34c889e；回退 V5.1.16 blob 如上。反光質感、實機裁切及效能待驗收。
+
+## V5.1.18（品質模式一致性，待驗收）
+- 使用者已接受 V5.1.17 鏡面反光；回報品質降低後背景跳動、人物光框疑似回舊版。確認現有品質 CSS 隱藏 pv-c/stars/near mist，低品質 WebGL 跳過後續圖層，SR SVG 僅高品質啟用；無法確認舊火焰動畫實際復現。
+- 統一所有品質使用 V5.1.17 已核可的 v3 靜態 alpha 金紫紋理與固定輪廓，移除即時位移 SVG/選擇器及互動計時，明確停用歷史 SR body/label 動畫。桌面也暫停火焰流動，保留外觀、漸入、浮動及鏡面反光。背景全部品質同一圖層構圖，停止歷史 CSS 光流動畫；WebGL 保留 drawing buffer，正常/中/低 60/90/130ms，開包次要層保留最後畫面，層時鐘連續；個別 context lost 使用同張靜態紋理而不切換整組，非正常 GPU context loss 仍可能出現畫面差異。低品質保持原浮動振幅/週期，回升判斷6→18秒；保留粒子數降級。未改抽卡/收藏、手機翻面、預覽或 V5.2 背景。commit 6adb986ae49fe16032c8f2b626bfcb14fa95a8ca；回退 V5.1.17 blob b59592363315594b3b6dd6399e9b36787854e5f5。實際強制各品質、GPU context loss、效能/視覺待驗收。
