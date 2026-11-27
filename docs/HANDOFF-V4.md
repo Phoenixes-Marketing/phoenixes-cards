@@ -91,3 +91,6 @@
 ## V4.0.13 — 階段性完成候選
 - Commit af52765eca86c268680f0a52b4cb3c901527ee84：使用者已手動上傳修復素材，hero-glass.webp SHA 已變更為 e478710d934dfa99f7cb24a96f4e8d9c03400a9e；移除 V4.0.12 六角 CSS 裁切，保留透明底色及原尺寸，JS 逐字不變，title/footer 更新。
 - GitHub 素材讀取回傳空 content，尚無法驗證實際圖像內容或透明通道；Pages 與灰底消失待實機驗收。V4.0.11 仍為已驗收基準。
+
+## V4.0.14 — 排除素材快取
+- 複製現有按鈕 blob 至 hero-glass-clean-v14.webp，保留舊檔，所有引用改用新檔名；版本更新。未驗證素材像素及 Pages，待實機驗收。
