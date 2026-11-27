@@ -2,7 +2,7 @@
 更新：2026-11-27
 
 ## 基準與狀態
-- V4.0.14 已由使用者實機驗收，指定目前最成功版本；灰底已消失。V5.0.1 已提交 main，正式網站部署及使用者驗收待確認。
+- V4.0.14 已由使用者實機驗收，指定目前最成功版本；灰底已消失。V5.0.4 已提交 main，正式網站部署及使用者驗收待確認。
 - Repo Phoenixes-Marketing/phoenixes-cards，main，核心 index.html。正式網站 https://phoenixes-marketing.github.io/phoenixes-cards/ 。
 - 鎖定 commit efbafccca714d4d0353df39bdd9ece03397d2c6d；備份 baseline/v4.0.14-final-ui，不覆寫。完整歷史 docs/HANDOFF-V4.md。
 
@@ -35,3 +35,9 @@
 - 使用者批准直接更新 main。程式 commit 5c7ea6a32f3e5d3b4da270f1fc7259c8ae0a6c52；上一版復原點 4cd6e358d7a154a35487891db6b90b34009f3563。
 - 簡化為右側升空、上方單一大弧、左側回歸；四段 cubic Bezier 預取樣弧長，梯形速度曲線（19%加速、51%巡航、30%減速），81個預算 transform keyframes/卡，1950ms、130ms間隔，由左至右定位。保留切線朝向、最後24%轉正、遠近縮放及 V5.0.2 hover/float。
 - 未增加 Canvas、粒子或逐幀 JS；title/footer V5.0.3。正式部署、實際速度、重疊、FPS、手機/桌面回歸待驗收。V4.0.14 基準不覆寫。
+
+## V5.0.4 H（待驗收）
+- 使用者批准直接套用 H 模擬至 main。程式 commit b54bc872dd4d2e35e2abdb8538d7141ed37e832d；上一版復原點 5c7ea6a32f3e5d3b4da270f1fc7259c8ae0a6c52。
+- 垂直抽離300ms、畫面外轉向140ms、右下單向景深滑翔1200ms、定位回正400ms；每張間隔150ms。初始俯仰46度、側身34度、細微側傾4度、回正1.5度上限。預算 WAAPI transform，無新增逐幀 JS、Canvas 或粒子。
+- 保留既有正式扇形定位（9度間距）及 hover，依卡序懸浮3–4.5px、4.1–5.39秒；揭曉前以 CSS 強制隱藏 slot/hero 正面，open 後沿用既有翻牌。未改卡池、收藏及 SR 流程。title/footer V5.0.4。
+- 正式舞台尺寸與模擬不同，採響應式座標與既有扇形；不是逐像素移植。實際部署、正面保護、手機/桌面動作、連抽及 FPS 待驗收。基準分支不覆寫。
