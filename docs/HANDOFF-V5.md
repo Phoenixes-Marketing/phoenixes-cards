@@ -81,3 +81,7 @@
 ## V5.0.14（待驗收）
 - 使用者確認 V5.0.13 預覽改善，2K 全螢幕效能暫不處理。使用者上傳 assets/ui/phoenixes-logo.webp（30268 bytes），要求替換左上文字並將 INTERNAL EDITION 移至右下。
 - commit 4518371fa8546428fabec64c3ae3ae60682147ed：Logo 桌面108×48、手機88×44 CSS 容器，contain 等比例，維持按鈕與 header 高度；footer 左版本收藏、右 edition，手機左右至少24px安全邊距。無新增動畫。V5.0.13 復原點 d3119f6af94371e6ff9c3fc5e6e66d62779cd8d6。部署與實機待驗收。
+
+## V5.0 FINAL — 使用者驗收完成
+- V5.0.14 為使用者指定的最終穩定基準，保留全部現有開包、飛行、漂浮、預覽、縮放、Logo、footer、收藏與抽卡邏輯。2K 全螢幕輕微卡頓暫不處理；V5.0.10 自動化量測不等同 V5.0.14 實測。
+- V5.1 先獨立模擬卡牌材質：厚度、clearcoat、N 霧面、SR 選擇性全息、文字保護；不先改正式動畫或卡池。參考 Lone3m-tech/prism-holo-pack，保留 MIT 署名如採用程式碼，不使用其專有品牌素材。
