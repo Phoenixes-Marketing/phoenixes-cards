@@ -116,3 +116,6 @@
 
 ## V5.1.9（待驗收）
 - 使用者確認 V5.1.8 改善，要求人物/魔法陷阱光框左右內縮1%、上下2%；沿用素材核心座標校正前置光圖 left−14.69%、right−15.71%、top−11.46%、bottom−7.48%，固定細光 inset 2% 1%。以柔邊 CSS mask 收斂火焰外擴；SVG stitchTiles/feTile/feOffset 將位移雜訊單方向向上平移一個週期(.25 bbox)，1.85s 線性無限循環，scale .023 bbox，不再來回變頻/變幅。實際瀏覽器無縫程度及效能待驗收。hero manual 就位後 aura-ready 漸入，zoom>1 隱藏並停用 filter，關閉先移除 aura-ready，手牌在預覽遮蔽時不跑 SVG。未改開包、抽卡、收藏、既有頁尾。commit d81d2ebb9fa04e48460f9436532633025b5439b2；回退 V5.1.8 blob 6fd18655cf1a12cc48aecb7f72ee54e5d52bc5ca。
+
+## V5.1.10（待驗收）
+- 使用者認可 V5.1.9 整體方向，回報人物光效磨砂感及銀線太細。SVG noise baseFrequency 7/16→3/8，displacement scale .023→.014，保留 stitchTiles、單向1.85s循環及柔邊遮罩；磨砂原因為推測。雙類型固定光框四側 inset .5%；SR 素材依既有目視核心校正 left−15.35%、right−16.37%、top−13.38%、bottom−9.28%。銀線1→2px，提亮白色及冷紫外暈，SR 固定線維持原強度。手牌與 hero 共用；飛行不顯示、就位漸入、zoom>1 隱藏皆保留。未改其他機制。commit 0a40cd22d2c20d6e497fd24678a43ec1e8dce0a1；回退 V5.1.9 blob 003da51a577090e20abc7d90defdb81cccb8c24d。實際質感、貼合、循環及效能待使用者驗收。
