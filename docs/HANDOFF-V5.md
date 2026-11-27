@@ -30,3 +30,8 @@
 - 使用者批准直接更新 main。程式 commit 4cd6e358d7a154a35487891db6b90b34009f3563；上一版復原點 23d04b9dd82e1ddc57232b2402451f83c37b36ff。
 - 五段切線方向連續的 cubic Bezier，預算 97 個 transform keyframes/卡，WAAPI 播放 2380ms、145ms 間隔；卡頂追蹤切線、角度展開、最後16%轉正，縮放最遠 .42。段間速度仍需實測。
 - 未翻牌 body 使用獨立 translate 漂浮，hover transform 上抬15px/1.04倍；低品質與 reduced motion 保留停止漂浮。未增加粒子、Canvas 或逐幀 JS 迴圈。title/footer V5.0.2。部署、FPS、實際視覺及回歸待驗收。
+
+## V5.0.3（待驗收）
+- 使用者批准直接更新 main。程式 commit 5c7ea6a32f3e5d3b4da270f1fc7259c8ae0a6c52；上一版復原點 4cd6e358d7a154a35487891db6b90b34009f3563。
+- 簡化為右側升空、上方單一大弧、左側回歸；四段 cubic Bezier 預取樣弧長，梯形速度曲線（19%加速、51%巡航、30%減速），81個預算 transform keyframes/卡，1950ms、130ms間隔，由左至右定位。保留切線朝向、最後24%轉正、遠近縮放及 V5.0.2 hover/float。
+- 未增加 Canvas、粒子或逐幀 JS；title/footer V5.0.3。正式部署、實際速度、重疊、FPS、手機/桌面回歸待驗收。V4.0.14 基準不覆寫。
