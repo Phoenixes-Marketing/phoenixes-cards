@@ -27,7 +27,7 @@ async function start(page, random = .75) {
 async function drag(page, device, dx, dy) {
   const { x, y, width, height } = await page.locator('#pack').boundingBox();
   const cx = x + width / 2;
-  const cy = y + height / 2;
+  const cy = y + height * (dy < 0 ? .82 : .5);
   if (device === 'desktop') {
     await page.mouse.move(cx, cy);
     await page.mouse.down();
@@ -44,6 +44,34 @@ async function drag(page, device, dx, dy) {
   }
   await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await session.detach();
+}
+
+async function progressGesture(page, device) {
+  const { x, y, width, height } = await page.locator('#pack').boundingBox();
+  const cx = x + width / 2;
+  const cy = y + height * .82;
+  const distance = page.viewportSize().height * .5;
+  if (device === 'desktop') {
+    await page.mouse.move(cx, cy);
+    await page.mouse.down();
+    return {
+      move: progress => page.mouse.move(cx, cy - distance * progress, { steps: 6 }),
+      end: () => page.mouse.up(),
+    };
+  }
+  const session = await page.context().newCDPSession(page);
+  await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: cx, y: cy }] });
+  return {
+    move: progress => session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: cx, y: cy - distance * progress }] }),
+    end: async () => {
+      await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+      await session.detach();
+    },
+    cancel: async () => {
+      await session.send('Input.dispatchTouchEvent', { type: 'touchCancel', touchPoints: [] });
+      await session.detach();
+    },
+  };
 }
 
 async function expectPackAngle(page, angle) {
@@ -117,13 +145,13 @@ async function playOpening(browser, name, options, video = false) {
     await drag(page, name, -145, 0);
     await expectPackAngle(page, 0);
     if (video) await shot(page, name + '-front');
-    if (name === 'mobile') await drag(page, name, 0, -100);
-    else await page.locator('#pack').click();
+    const full = await progressGesture(page, name);
+    await full.move(1.06);
+    await full.end();
     const metrics = await finishOpening(page);
-    assert(metrics.durationMs > 2100 && metrics.frames > 20);
+    assert(metrics.durationMs > 1200 && metrics.frames > 20);
     const first = page.locator('#hand .slot').first();
-    if (name === 'mobile') await first.tap();
-    else await first.click();
+    await first.click();
     await page.waitForFunction(() => !!document.querySelector('#hand .slot.open .label')?.textContent);
     const flip = await first.locator('.inner').evaluate(node => ({
       angle: new DOMMatrix(getComputedStyle(node).transform).m11,
@@ -150,6 +178,48 @@ async function playOpening(browser, name, options, video = false) {
       await record.saveAs(path.join(output, name + '-opening.webm'));
       await record.delete();
     }
+  }
+}
+
+async function checkProgressControl(browser, name, options) {
+  const context = await browser.newContext(options);
+  const page = await context.newPage();
+  const result = pageChecks(page);
+  try {
+    await start(page);
+    const gesture = await progressGesture(page, name);
+    for (const progress of [.25, .5, .75]) {
+      await gesture.move(progress);
+      await page.waitForFunction(expected => Math.abs(window.phoenixesPackProgress - expected) < .035, progress);
+      await page.waitForFunction(() => +getComputedStyle(document.querySelector('.swipe-cue')).opacity < .05);
+      const visual = await page.evaluate(() => ({
+        progress: window.phoenixesPackProgress,
+        preview: document.getElementById('stage').classList.contains('drag-preview'),
+        light: +getComputedStyle(document.querySelector('.pack-light-origin')).opacity,
+        cue: +getComputedStyle(document.querySelector('.swipe-cue')).opacity,
+      }));
+      assert(visual.preview && visual.light > 0 && visual.cue < .05);
+      await shot(page, `${name}-progress-${progress * 100}`);
+    }
+    await gesture.move(.25);
+    await page.waitForFunction(() => Math.abs(window.phoenixesPackProgress - .25) < .035);
+    if (name === 'mobile') await gesture.cancel();
+    else await gesture.end();
+    await page.waitForFunction(() => window.phoenixesPackProgress === 0 && !document.getElementById('stage').classList.contains('gesture-active'));
+    assert.equal(await page.locator('#hand .slot').count(), 0);
+    assert.equal(await page.evaluate(() => localStorage.getItem('phoenixes-portable')), null);
+    await page.waitForTimeout(300);
+    assert(+await page.locator('.swipe-cue').evaluate(node => getComputedStyle(node).opacity) > .9);
+    await shot(page, `${name}-progress-reset`);
+
+    const full = await progressGesture(page, name);
+    await full.move(1.06);
+    await full.end();
+    await finishOpening(page);
+    assert.equal(await page.evaluate(() => window.phoenixesOpeningCount), 1);
+    return { network: result() };
+  } finally {
+    await context.close();
   }
 }
 
@@ -263,6 +333,18 @@ async function checkFallbacks(browser) {
       await context.close();
     }
   }
+  const context = await browser.newContext({ viewport: { width: 1024, height: 720 } });
+  try {
+    const page = await context.newPage();
+    const check = pageChecks(page);
+    await start(page);
+    const pack = page.getByRole('button', { name: /向上拖動半個螢幕/ });
+    await pack.focus();
+    await page.keyboard.press('Enter');
+    report.keyboard = { metrics: await finishOpening(page), network: check() };
+  } finally {
+    await context.close();
+  }
   return report;
 }
 
@@ -332,6 +414,7 @@ async function main() {
         results.stages[name] = await inspectStages(browser, name, options);
         await playOpening(browser, name, options, true);
       }
+      results.devices[name].progress = await checkProgressControl(browser, name, options);
     }
     results.fallbacks = await checkFallbacks(browser);
     if (output) await fs.writeFile(path.join(output, 'test-results.json'), JSON.stringify(results, null, 2) + '\n');
