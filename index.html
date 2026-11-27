@@ -558,7 +558,7 @@ main>footer .footer-edition{letter-spacing:.06em}
 #stage .scene.reading.normal .view-dust i.unified-dust:nth-child(n+41){display:none}
 #stage #collection .collection-spark.unified-dust{display:none}
 #stage.collection-open #collection .collection-spark.unified-dust{display:block}
-#stage:is(.pack-opening,.charge,.tear,.drag-preview,.collection-open,.paused,.flat):not(.never) .world>.dust .unified-dust,#stage:has(.scene.active) .world>.dust .unified-dust{animation-play-state:paused!important}
+#stage:is(.pack-opening,.charge,.tear,.drag-preview,.collection-open,.paused,.flat) .world>.dust .unified-dust,#stage:has(.scene.active) .world>.dust .unified-dust{animation-play-state:paused!important}
 #stage:is(.collection-open,.flat) .world>.dust,#stage:has(.scene.active) .world>.dust{visibility:hidden!important}
 #stage.paused #collection .collection-spark.unified-dust,#stage:has(.scene.reading) #collection .collection-spark.unified-dust,#stage.paused .view-dust i.unified-dust{animation-play-state:paused!important}
 #stage[data-level="1"] .world>.dust .unified-dust:nth-child(n+29),#stage[data-level="1"] .scene.reading .view-dust i.unified-dust:nth-child(n+41),#stage[data-level="1"] .scene.reading.normal .view-dust i.unified-dust:nth-child(n+29),#stage.collection-open[data-level="1"] #collection .collection-spark.unified-dust:nth-child(n+41){display:none}
@@ -574,7 +574,7 @@ function syncPreviewLayout(){const panel=document.getElementById('scene');if(!pa
 addEventListener('resize',syncPreviewLayout);visualViewport?.addEventListener('resize',syncPreviewLayout);
 const headerElement=document.querySelector('main>header');const syncHeaderHeight=()=>document.documentElement.style.setProperty('--header-height',headerElement.getBoundingClientRect().height+'px');syncHeaderHeight();new ResizeObserver(syncHeaderHeight).observe(headerElement);
 const q=id=>document.getElementById(id),stage=q('stage'),hand=q('hand'),zone=q('zone'),packRear=q('packRear'),scene=q('scene'),hero=q('hero'),tilt=q('tilt'),host=q('particles'),wait=ms=>new Promise(r=>setTimeout(r,ms)),base='translate(-50%,-50%)';let state='idle',busy=false,auto=false,stress=false,stop=false,book=false,draw=[],seen=new Set(),owned={},testing=false,resume=null,ready=false,level=0,quality=0,monitoring=false,poor=0,good=0,results=[],rect,point,raf=0,drag=false,suppress=0;const deck=Array.from({length:40},(_,i)=>({id:i+1,rank:i<19?'SR':'N',name:["封王之主-開闢的王者","挖安捏共賀啊-葉","蒸汽控制者-明啊","少年股神-石投顧","會計大姐頭-冠冠","會計二姐頭-Ping芸","萬能鍊金術士-xXian","火力吸引擔當-Kai","絕對的出事擔當-韓森","收拾殘局擔當-善後哥","西趴仔-Kerry","前線衝鋒突擊小組","前線衝鋒突擊小組","前線衝鋒突擊小組","誤入歧途的小羔羊-阿崧","不滅的封裝北帝-Zhen謙哥","台中扛霸子-Bo元哥","封裝南霸天-How新哥","締造傳奇的女王-Sally","起飛囉","YF-立即增援","強欲之呦呼","呀-不要拍我","當沖","心變-另謀高就","都包好了-臨時調撥","雷霆一擊","甩尾落跑-孤輪式","魅惑-強制腿軟","不期不待-不受傷害","龍捲風爆裂","牙寶的失心瘋","背鍋的苦行僧","啪-沒了","全面暴跌","緊急停止","緊急停止","一片接一片-真香","吧檯機王","發薪日"][i],color:['#6d4ba0','#345d87','#94533c','#486b66'][i%4]}));try{owned=JSON.parse(localStorage.getItem('phoenixes-portable')||'{}')}catch{}function progress(){q('progress').textContent='收藏 '+Object.keys(owned).length+' / 40';q('collectionCount').textContent=q('progress').textContent}progress();/* Shared particle palette, shape and drift; reused DOM and cached canvas sprites. */
-const particleShape=i=>i%20===19?'soft':i%5===4?'star':'fine';
+const particleShape=i=>i%20===19?'soft':i%5===3?'star':'fine';
 const particleSize=i=>particleShape(i)==='soft'?7:particleShape(i)==='star'?6:4+(i%3)*.5;
 function particleMarkup(n,where){
  return Array.from({length:n},(_,i)=>{
