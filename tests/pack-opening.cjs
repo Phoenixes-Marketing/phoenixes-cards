@@ -384,6 +384,8 @@ async function checkCollection(browser, name, options) {
     }
     assert.equal(drawn.size, 40);
     assert.equal(names.size, 37);
+    await page.evaluate(() => fullQueue);
+    await page.waitForLoadState('networkidle');
     await page.reload();
     await action(page, '收藏圖鑑').click();
     assert.equal(await page.locator('.tile:not(:disabled) .thumb').count(), 40);
