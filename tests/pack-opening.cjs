@@ -133,6 +133,16 @@ async function shot(page, name) {
   if (output) await page.screenshot({ path: path.join(output, name + '.png') });
 }
 
+async function closeScene(page, mobile = false) {
+  await page.locator('.scene.view-ready').waitFor();
+  const box = await page.locator('#scene').boundingBox();
+  const x = box.x + 12;
+  const y = box.y + Math.min(160, box.height / 3);
+  if (mobile) await page.touchscreen.tap(x, y);
+  else await page.mouse.click(x, y);
+  await page.waitForFunction(() => !document.querySelector('.scene.active'));
+}
+
 async function finishOpening(page) {
   await action(page, '全部揭曉').waitFor();
   await page.waitForFunction(() => !document.getElementById('action').disabled && document.getElementById('action').textContent === '全部揭曉');
@@ -176,13 +186,14 @@ async function playOpening(browser, name, options, video = false) {
     assert(metrics.durationMs > 1200 && metrics.frames > 20);
     const first = page.locator('#hand .slot').first();
     await first.click();
-    await page.waitForFunction(() => !!document.querySelector('#hand .slot.open .label')?.textContent);
+    await page.waitForFunction(() => document.querySelector('#hand .slot')?.classList.contains('revealed-flat'));
     const flip = await first.locator('.inner').evaluate(node => ({
       angle: new DOMMatrix(getComputedStyle(node).transform).m11,
       style: getComputedStyle(node).transformStyle,
-      cull: getComputedStyle(node.querySelector('.front')).backfaceVisibility,
+      front: getComputedStyle(node.querySelector('.front')).display,
+      back: getComputedStyle(node.querySelector('.back')).display,
     }));
-    assert.deepEqual(flip, { angle: -1, style: 'preserve-3d', cull: 'hidden' });
+    assert.deepEqual(flip, { angle: 1, style: 'flat', front: 'block', back: 'none' });
     if (video) await shot(page, name + '-flip');
     await action(page, '全部揭曉').click();
     await action(page, '下一包').waitFor();
@@ -313,11 +324,9 @@ async function inspectStages(browser, name, options) {
     await action(srPage, '開啟卡包').click();
     await finishOpening(srPage);
     await srPage.locator('#hand .slot').first().click();
-    await srPage.locator('.scene.hold .hero.open').waitFor();
-    await srPage.waitForFunction(() => document.querySelector('.scene.active') && document.getElementById('message').textContent.includes('雙指'));
+    await srPage.locator('.scene.hold.view-ready .hero.open').waitFor();
     await shot(srPage, name + '-08-sr');
-    await srPage.mouse.click(12, 160);
-    await srPage.waitForFunction(() => !document.querySelector('.scene.active'));
+    await closeScene(srPage, options.isMobile);
     assert(await srPage.locator('#hand .slot.sr-revealed').count());
     return { sample, network: result(), srNetwork: srNetwork() };
   } finally {
@@ -336,17 +345,16 @@ async function inspectPreview(browser, name, options, rank) {
     const first = page.locator('#hand .slot').first();
     await first.click();
     if (rank === 'SR') {
-      await page.waitForFunction(() => document.querySelector('.scene.active') && document.getElementById('message').textContent.includes('雙指'));
+      await page.locator('.scene.view-ready').waitFor();
       await shot(page, `${name}-preview-sr-summon`);
-      if (options.isMobile) await page.touchscreen.tap(12, 110);
-      else await page.mouse.click(12, 110);
-      await page.waitForFunction(() => !document.querySelector('.scene.active') && document.querySelector('#hand .slot.sr-revealed'));
+      await closeScene(page, options.isMobile);
+      await page.waitForFunction(() => document.querySelector('#hand .slot.sr-revealed'));
       await page.waitForTimeout(500);
     } else {
-      await page.waitForFunction(() => document.querySelector('#hand .slot.open .label')?.textContent === 'N');
+      await page.waitForFunction(() => document.querySelector('#hand .slot.revealed-flat'));
     }
     await first.click();
-    await page.waitForFunction(() => document.querySelector('.scene.active') && document.getElementById('message').textContent.includes('雙指'));
+    await page.locator('.scene.view-ready').waitFor();
     await page.waitForFunction(() => document.querySelector('#hero .front img')?.src.endsWith('.png'));
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
     const layout = await page.evaluate(() => {
@@ -487,10 +495,8 @@ async function checkCollection(browser, name, options) {
       const rare = await page.locator('#hand .slot.sr').count();
       await action(page, '全部揭曉').click();
       for (let i = 0; i < rare; i++) {
-        await page.waitForFunction(() => document.querySelector('.scene.active') && document.getElementById('message').textContent.includes('雙指'));
-        if (name === 'mobile') await page.touchscreen.tap(12, 160);
-        else await page.mouse.click(12, 160);
-        await page.waitForFunction(() => !document.querySelector('.scene.active'));
+        await page.locator('.scene.view-ready').waitFor();
+        await closeScene(page, name === 'mobile');
       }
       await action(page, '下一包').waitFor();
       assert.equal(await page.evaluate(() => Object.keys(JSON.parse(localStorage.getItem('phoenixes-portable'))).length), pack * 4);
