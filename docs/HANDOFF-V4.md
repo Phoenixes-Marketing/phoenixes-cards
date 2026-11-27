@@ -55,3 +55,7 @@
 - 使用者授權修正灰邊、光暈裁切、圖鑑重複標題與反灰、魔法陣閃爍。
 - Commit bf97de568b9afbd946b93ecd50f30e4124d16c74：CSS 試行主按鈕六角裁切與背景定位、圖鑑/返回按鈕留白、禁用狀態保持亮度；移除中央標題，收藏數量移至返回同列。未修改 WebP 原檔，素材 alpha 與原始光暈尚未驗證。
 - 魔法陣試行 SVG geometricPrecision、backface-visibility 與最細圓線 0.8→1.4；保留旋轉、發光、混合模式及原有 JS（逐字比對一致）。閃爍原因未確認，實機效果與 FPS 待驗收；可獨立撤回這些 CSS。title/footer 同步 V4.0.4，Pages 部署待確認。
+
+## V4.0.5（2026-11-27）
+- Commit b05c4ab27f0e568748624796a440db590741c395：箭頭降低、前置及縮短飄動；按鈕 CSS 留白試修；圖鑑雙層金屬框與單一 transform/opacity 高光，低品質與背景暫停、尊重 reduced-motion；中低品質減少近景霧，低品質保留一層光流與一層霧的 CSS 動畫，WebGL 跳過 display:none 圖層。保留 SR 場景及手動關閉沉浸效果的原有行為。
+- 尚未實際壓縮神殿 WebP 或修復按鈕原始 alpha，未加入預載；待後續素材處理。未確認下一包消失根因，Pages、手機、安全距離、光暈、FPS 與連續開包待驗收。title/footer 已同步 V4.0.5；可回復 V4.0.4。
