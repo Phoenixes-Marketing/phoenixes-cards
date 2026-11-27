@@ -136,3 +136,7 @@
 ## V5.1.15（緊急修正，待實機驗收）
 - 使用者回報 V5.1.14 預覽轉動嚴重卡頓、返回手牌顯示背面。可能原因為 SVG filter/混合與雙面 3D 合成衝突，未獨立重現。settleHandFace 於 commit/summon 回程固定 open+revealed-flat；已揭曉 slot 直接顯示前面、隱藏背面，不再使用 180° 雙面合成；preview/manual 同樣固定 preview-flat，保留外層 tilt；preview finally 依 seen 恢復正面。close 清除待執行 RAF/光效計時；修正被註解吞掉的 resize listener。
 - 保留 v3 紋理/輪廓與漸入，前景 aura 改正常 alpha 混合；高品質桌面已就定位才跑 SVG 波形，預覽操作期間暫停位移 280ms，手牌在預覽中暫停漂浮與 filter；手機/低中品質使用靜態紋理、手機停用舊 preview sweep/spectrum/metal，取捨流動動畫以保操作穩定。未量測 FPS。手機 header 68px/footer 42px、頁尾左右38px（窄機30px）與 safe area、按鈕/Logo垂直置中，操作按鈕上移避免 footer，保留字體及抽卡邏輯。commit d4233c0b6a8a9495aa57b18ad0c27309e2f44dce；回退 V5.1.14 blob a274024a4cf6e768190b841555915555510dffc2。手機 Safari 與桌面實際正面恢復、旋轉、畫質和部署均待驗收，V5.2 暫停。
+
+## V5.1.16（待驗收）
+- 使用者確認 V5.1.15 手機預覽卡頓/返回卡背問題與上下欄均已改善，接受手機靜態光效。新回報：手機 N 翻牌先看到背面翻轉再瞬間換正面。推測原本 ordinary 雙面3D 到 commit 固定正面的銜接與瀏覽器合成有關，未獨立重現。
+- 僅修改 ordinary：coarse/no-hover/<=600px 使用單平面兩段 WAAPI scaleX 1→.025，於最窄時明確隱藏背面顯示正面，再 .025→1；45/55%分段保留總時長550/320ms，完成後 commit 固定正面，異常 fallback 亦 commit；reduced-motion 直接正面。桌面原翻面、SR、光框、手機 UI、機率與收藏不變。commit 00a3fc4287de29cec9d0987e25a78dc1de647800；回退 V5.1.15 blob b9ee77ee2d29e4784b6129301be6e4a728971a6f。手機單張/全部揭曉及返回預覽待實機驗收。
