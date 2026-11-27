@@ -140,3 +140,7 @@
 ## V5.1.16（待驗收）
 - 使用者確認 V5.1.15 手機預覽卡頓/返回卡背問題與上下欄均已改善，接受手機靜態光效。新回報：手機 N 翻牌先看到背面翻轉再瞬間換正面。推測原本 ordinary 雙面3D 到 commit 固定正面的銜接與瀏覽器合成有關，未獨立重現。
 - 僅修改 ordinary：coarse/no-hover/<=600px 使用單平面兩段 WAAPI scaleX 1→.025，於最窄時明確隱藏背面顯示正面，再 .025→1；45/55%分段保留總時長550/320ms，完成後 commit 固定正面，異常 fallback 亦 commit；reduced-motion 直接正面。桌面原翻面、SR、光框、手機 UI、機率與收藏不變。commit 00a3fc4287de29cec9d0987e25a78dc1de647800；回退 V5.1.15 blob b9ee77ee2d29e4784b6129301be6e4a728971a6f。手機單張/全部揭曉及返回預覽待實機驗收。
+
+## V5.1.17（待驗收）
+- 使用者確認 V5.1.16 暫無重大問題，作為穩定基準（commit 00a3fc4287de29cec9d0987e25a78dc1de647800 / blob 43596a7301d29a11abc2c0c1c53a89db1e34176b）。回報預覽鏡面反光消失或溢出。程式確認 face overflow visible、舊 spectrum/metal inset−70%，且 V5.1.15 interaction/mobile 停用舊材質。
+- 僅 preview card(c,true) 換為獨立 card-reflection 裁切容器（inset0/overflow hidden/z2），單層銀白或暖白線性漸層，沿既有 track RAF 的 --fx/fy/fr 移動、tracking 時淡入 .62、停止追蹤淡出；不使用 mix-blend、SVG filter 或自動 sweep，不加動畫迴圈。手機/桌面皆可用，zoom>1 隱藏，外側光框不裁切。保留單面修正、手機 N 翻面、光效效能策略、UI 及抽卡收藏；V5.2 背景尚未修改。commit dfaab1e095514342e46550737d73002fe34c889e；回退 V5.1.16 blob 如上。反光質感、實機裁切及效能待驗收。
