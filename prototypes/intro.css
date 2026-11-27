@@ -1,0 +1,4 @@
+html.intro-loading{background:#080510}
+html.intro-loading main{visibility:hidden}
+#intro-cover{position:fixed;inset:0;width:100%;height:100%;z-index:10000;border:0;border-radius:0;padding:0;margin:0;background:#080510;cursor:pointer;touch-action:manipulation}
+#intro-cover span{position:absolute;bottom:max(65px,env(safe-area-inset-bottom));left:0;right:0;text-align:center;color:#e7d7b6;font:12px Arial,sans-serif;letter-spacing:.18em;opacity:.7}
