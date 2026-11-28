@@ -1,0 +1,28 @@
+{
+  "version": "V5.4 Audio Lab B3",
+  "productionBase": {
+    "commit": "38f10f07d65b789524034436f13224eb15d68d05",
+    "indexBlob": "377b890b38c4e6610eb1adbe941a7108710f484b"
+  },
+  "status": "2026-11-28 暫定；開場、蓄力、能量擴散與背景音樂仍在比較，其餘先定案",
+  "settings": {
+    "master": 100,
+    "muted": false,
+    "cues": {
+      "intro": { "on": true, "volume": 30, "variant": "a", "delay": 0, "rate": 1 },
+      "click": { "on": true, "volume": 20, "variant": "b", "delay": 0, "rate": 0.8 },
+      "charge": { "on": true, "volume": 60, "variant": "d", "delay": 0, "rate": 0.7 },
+      "tear": { "on": true, "volume": 46, "variant": "c", "delay": 0, "rate": 1 },
+      "burst": { "on": true, "volume": 38, "variant": "e", "delay": 0, "rate": 1.2 },
+      "fly": { "on": true, "volume": 25, "variant": "b", "delay": 0, "rate": 1.3 },
+      "flip": { "on": true, "volume": 35, "variant": "b", "delay": 0, "rate": 1.1 },
+      "srcharge": { "on": true, "volume": 40, "variant": "c", "delay": 0, "rate": 0.8 },
+      "sr": { "on": true, "volume": 15, "variant": "b", "delay": 250, "rate": 0.7 },
+      "srfast": { "on": true, "volume": 30, "variant": "d", "delay": 0, "rate": 0.8 },
+      "inspect": { "on": true, "volume": 25, "variant": "b", "delay": 0, "rate": 0.7 },
+      "book": { "on": true, "volume": 30, "variant": "a", "delay": 0, "rate": 0.7 },
+      "next": { "on": true, "volume": 32, "variant": "d", "delay": 0, "rate": 0.9 }
+    },
+    "bgm": { "on": true, "volume": 70, "variant": "e" }
+  }
+}

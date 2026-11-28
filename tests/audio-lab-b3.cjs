@@ -23,7 +23,7 @@ function monitor(page){
 }
 async function skipIntro(page){const cover=page.locator('#intro-cover');if(await cover.count())await cover.click();await page.waitForFunction(()=>!document.getElementById('intro-cover'))}
 async function openPanel(page){const panel=page.locator('#audio-lab-b3-panel');if(await panel.isHidden())await page.getByRole('button',{name:'♫ AUDIO LAB B3',exact:true}).click();await panel.waitFor({state:'visible'});return panel}
-async function enable(page){const panel=await openPanel(page);await panel.getByRole('button',{name:'啟用／恢復音訊',exact:true}).click();await page.waitForFunction(()=>document.querySelector('[data-status]')?.textContent.includes('已啟用音訊'));return panel}
+async function enable(page){const panel=await openPanel(page);await panel.getByRole('button',{name:'啟用／恢復音訊',exact:true}).click();await page.waitForFunction(()=>/已啟用音訊|背景音樂播放中/.test(document.querySelector('[data-status]')?.textContent||''));return panel}
 
 async function testDesktop(page){
   await page.goto(url);await skipIntro(page);
@@ -33,15 +33,16 @@ async function testDesktop(page){
   assert.equal(await sha(production.flight),await sha(formal.flight));assert.equal(await sha(production.styles),await sha(formal.styles));
   await formalPage.getByRole('button',{name:'開啟卡包',exact:true}).click();await formalPage.waitForFunction(()=>state==='reveal',{timeout:12000});const formalMetrics=await formalPage.evaluate(()=>window.phoenixesOpeningMetrics);assert(formalMetrics.durationMs>2000);assert.deepEqual(formalReport.errors,[]);assert.deepEqual(formalReport.httpErrors,[]);assert.deepEqual(formalReport.failed,[]);await formalPage.close();
   assert.equal(await page.locator('#audio-lab-b3-panel details').count(),13);
-  assert.equal(await page.locator('#audio-lab-b3-panel [data-variant]').count(),65);
-  assert.equal(await page.locator('[data-bgm-select] option').count(),5);
+  assert.equal(await page.locator('#audio-lab-b3-panel [data-variant]').count(),80);
+  assert.equal(await page.locator('[data-bgm-select] option').count(),10);
   const panel=await enable(page);
   const decoded=await page.evaluate(async()=>{
     const AC=window.AudioContext||window.webkitAudioContext,ctx=new AC();await ctx.resume();
-    const urls=[...Array(13)].flatMap((_,i)=>['a','b','c','d','e'].map(v=>`audio-lab-b3/sfx/${['intro','click','charge','tear','burst','fly','flip','srcharge','sr','srfast','inspect','book','next'][i]}-${v}.ogg`)).concat(['a','b','c','d','e'].map(v=>`audio-lab-b3/bgm/bgm-${v}.ogg`));
+    const expanded=new Set(['intro','charge','burst']),cues=['intro','click','charge','tear','burst','fly','flip','srcharge','sr','srfast','inspect','book','next'];
+    const urls=cues.flatMap(cue=>(expanded.has(cue)?['a','b','c','d','e','f','g','h','i','j']:['a','b','c','d','e']).map(v=>`audio-lab-b3/sfx/${cue}-${v}.ogg`)).concat(['a','b','c','d','e','f','g','h','i','j'].map(v=>`audio-lab-b3/bgm/bgm-${v}.ogg`));
     const durations=[];for(const file of urls){const response=await fetch(file);if(!response.ok)throw new Error(`${file} ${response.status}`);const buffer=await ctx.decodeAudioData(await response.arrayBuffer());durations.push(buffer.duration)}await ctx.close();return {count:durations.length,min:Math.min(...durations),max:Math.max(...durations)};
   });
-  assert.equal(decoded.count,70);assert(decoded.min>0);assert(decoded.max>50);
+  assert.equal(decoded.count,90);assert(decoded.min>0);assert(decoded.max>50);
   await page.screenshot({path:path.join(output,'desktop-panel.png'),fullPage:true});
 
   await panel.getByRole('button',{name:'重播開場',exact:true}).click();
@@ -65,15 +66,15 @@ async function testDesktop(page){
   const after=await page.evaluate(()=>({formal:localStorage.getItem('phoenixes-portable'),b1:localStorage.getItem('phoenixes-audio-lab-portable'),b2:localStorage.getItem('phoenixes-audio-lab-v2-portable'),b3:localStorage.getItem('phoenixes-audio-lab-b3-portable')}));
   assert.deepEqual(after,before);
 
-  await panel.locator('[data-bgm-on]').check();await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('背景音樂播放中'));await panel.getByRole('button',{name:'暫停',exact:true}).click();await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('已暫停'));
-  await panel.getByRole('button',{name:'顯示／複製設定',exact:true}).click();const exported=await panel.locator('[data-export]').inputValue();assert(exported.includes('377b890b38c4e6610eb1adbe941a7108710f484b'));assert(JSON.parse(exported).settings.cues.intro);
+  await panel.locator('[data-bgm-on]').check();await panel.getByRole('button',{name:'暫停',exact:true}).click();await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('已暫停'));await panel.getByRole('button',{name:'播放／繼續',exact:true}).click();await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('背景音樂播放中'));await panel.getByRole('button',{name:'暫停',exact:true}).click();
+  await panel.getByRole('button',{name:'顯示／複製設定',exact:true}).click();const exported=await panel.locator('[data-export]').inputValue();assert(exported.includes('377b890b38c4e6610eb1adbe941a7108710f484b'));const preset=JSON.parse(exported).settings;assert.equal(preset.master,100);assert.deepEqual(preset.bgm,{on:true,volume:70,variant:'e'});assert.deepEqual(preset.cues.click,{on:true,volume:20,variant:'b',delay:0,rate:.8});assert.deepEqual(preset.cues.sr,{on:true,volume:15,variant:'b',delay:250,rate:.7});
   return {decoded,nMetrics,formalMetrics,productionMatch:{flightHash:await sha(production.flight),styleHash:await sha(production.styles)},formalBrowser:formalReport};
 }
 
 async function testMobile(page){
   await page.goto(url);await skipIntro(page);const panel=await enable(page);
   const box=await panel.boundingBox();assert(box.x>=0&&box.x+box.width<=390);assert(box.y>=0&&box.y+box.height<=844);
-  await panel.locator('details').first().click();await panel.locator('[data-variant="e"]').first().click();await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('正在試聽'));
+  await panel.locator('[data-bgm-select]').selectOption('f');await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('背景音樂播放中'));await panel.locator('details').first().click();await panel.locator('[data-variant="j"]').first().click();await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('INTRO-J'));
   await page.screenshot({path:path.join(output,'mobile-panel.png'),fullPage:true});
   return {panel:{x:Math.round(box.x),y:Math.round(box.y),width:Math.round(box.width),height:Math.round(box.height)}};
 }

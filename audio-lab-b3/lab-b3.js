@@ -1,13 +1,14 @@
 (()=>{
 'use strict';
 
-const LETTERS=['a','b','c','d','e'];
+const BASE_VARIANTS=['a','b','c','d','e'];
+const EXPANDED_VARIANTS=[...BASE_VARIANTS,'f','g','h','i','j'];
 const CUES=[
-  {id:'intro',label:'開場 Duel Start.',volume:42,names:['祕法序列','柔亮符文','短促咒印','深色和聲','高階魔紋']},
+  {id:'intro',label:'開場 Duel Start.',volume:42,variants:EXPANDED_VARIANTS,names:['祕法序列','柔亮符文','短促咒印','深色和聲','高階魔紋','療癒法術一','植物魔法長尾','水系法術長尾','風系法術長尾','療癒法術六']},
   {id:'click',label:'按鈕操作',volume:20,names:['柔和選取','乾淨點按','細小刻度','木質撥弦','低調切換']},
-  {id:'charge',label:'拖曳／開包蓄力',volume:34,names:['空靈漸升','介面展開','魔法升階','暗色蓄能','場景轉換']},
+  {id:'charge',label:'拖曳／開包蓄力',volume:34,variants:EXPANDED_VARIANTS,names:['空靈漸升','介面展開','魔法升階','暗色蓄能','場景轉換','療癒蓄能','植物蓄能','水系蓄能','風系蓄能','短版療癒蓄能']},
   {id:'tear',label:'卡包撕開',volume:46,names:['真實紙張撕裂','卡包薄膜一','卡包薄膜二','俐落切面','厚布摩擦']},
-  {id:'burst',label:'能量擴散',volume:38,names:['柔長掃過','寬幅掠過','魔法釋放','法術擴散','風系擴散']},
+  {id:'burst',label:'能量擴散',volume:38,variants:EXPANDED_VARIANTS,names:['柔長掃過','寬幅掠過','魔法釋放','法術擴散','風系擴散','療癒擴散','植物擴散','水系擴散','風系擴散二','短版療癒擴散']},
   {id:'fly',label:'卡牌飛出',volume:28,names:['輕柔氣流','安靜掠過','短距離揮動','中距離揮動','長距離揮動']},
   {id:'flip',label:'N 卡翻面',volume:34,names:['薄牌滑動','卡面落定','真實紙張','抽牌動作','輕點卡面']},
   {id:'srcharge',label:'SR 登場蓄力',volume:36,names:['電影感漸升','空間回聲','療癒光流','風系長尾','祕法長尾']},
@@ -18,21 +19,28 @@ const CUES=[
   {id:'next',label:'下一包',volume:32,names:['展牌一','展牌二','洗牌','取出新包','紙牌洗動']}
 ];
 const BGM=[
-  {id:'a',name:'A｜Dark Shrine 神殿低鳴'},
+  {id:'a',name:'A｜Dark Shrine 神殿低鳴（保留）'},
   {id:'b',name:'B｜Cathedral Forest 空間環境'},
   {id:'c',name:'C｜Ancient Caverns 洞窟氛圍'},
   {id:'d',name:'D｜Dungeon Ambience 地城空氣'},
-  {id:'e',name:'E｜Tallbeard 神祕配樂'}
+  {id:'e',name:'E｜Tallbeard 神祕配樂（保留）'},
+  {id:'f',name:'F｜Tallbeard Loop 30-02（新）'},
+  {id:'g',name:'G｜Tallbeard Loop 30-03（新）'},
+  {id:'h',name:'H｜Tallbeard Loop 32-05（新）'},
+  {id:'i',name:'I｜Tallbeard Loop 38-08（新）'},
+  {id:'j',name:'J｜Tallbeard Patreon 04（新）'}
 ];
 const KEY='phoenixes-audio-lab-b3-settings-v1';
-const defaults=()=>({master:62,muted:false,cues:Object.fromEntries(CUES.map(c=>[c.id,{on:true,volume:c.volume,variant:'a',delay:0,rate:1}])),bgm:{on:false,volume:24,variant:'a'}});
+const DEFAULT_SELECTIONS={intro:{volume:30,variant:'a',delay:0,rate:1},click:{volume:20,variant:'b',delay:0,rate:.8},charge:{volume:60,variant:'d',delay:0,rate:.7},tear:{volume:46,variant:'c',delay:0,rate:1},burst:{volume:38,variant:'e',delay:0,rate:1.2},fly:{volume:25,variant:'b',delay:0,rate:1.3},flip:{volume:35,variant:'b',delay:0,rate:1.1},srcharge:{volume:40,variant:'c',delay:0,rate:.8},sr:{volume:15,variant:'b',delay:250,rate:.7},srfast:{volume:30,variant:'d',delay:0,rate:.8},inspect:{volume:25,variant:'b',delay:0,rate:.7},book:{volume:30,variant:'a',delay:0,rate:.7},next:{volume:32,variant:'d',delay:0,rate:.9}};
+const variantsFor=cue=>cue.variants||BASE_VARIANTS;
+const defaults=()=>({master:100,muted:false,cues:Object.fromEntries(CUES.map(c=>[c.id,{on:true,...DEFAULT_SELECTIONS[c.id]}])),bgm:{on:true,volume:70,variant:'e'}});
 let cfg=defaults();
 try{
   const saved=JSON.parse(localStorage.getItem(KEY)||'null');
   if(saved){
     cfg.master=number(saved.master,0,100,cfg.master);cfg.muted=!!saved.muted;
-    for(const cue of CUES){const v=saved.cues?.[cue.id];if(!v)continue;cfg.cues[cue.id]={on:v.on!==false,volume:number(v.volume,0,100,cue.volume),variant:LETTERS.includes(v.variant)?v.variant:'a',delay:number(v.delay,0,1000,0),rate:number(v.rate,.7,1.35,1)}}
-    if(saved.bgm)cfg.bgm={on:!!saved.bgm.on,volume:number(saved.bgm.volume,0,100,24),variant:LETTERS.includes(saved.bgm.variant)?saved.bgm.variant:'a'};
+    for(const cue of CUES){const v=saved.cues?.[cue.id];if(!v)continue;cfg.cues[cue.id]={on:v.on!==false,volume:number(v.volume,0,100,cue.volume),variant:variantsFor(cue).includes(v.variant)?v.variant:'a',delay:number(v.delay,0,1000,0),rate:number(v.rate,.7,1.35,1)}}
+    if(saved.bgm)cfg.bgm={on:!!saved.bgm.on,volume:number(saved.bgm.volume,0,100,24),variant:BGM.some(x=>x.id===saved.bgm.variant)?saved.bgm.variant:'a'};
   }
 }catch{}
 
@@ -170,7 +178,7 @@ const launch=document.createElement('button');launch.id='audio-lab-b3-launch';la
 const panel=document.createElement('aside');panel.id='audio-lab-b3-panel';panel.hidden=true;panel.setAttribute('aria-label','V5.4 Audio Lab B3 設定');
 panel.innerHTML=`
   <div class="lab-line"><strong style="color:#e6c99b;font-size:17px">V5.4 AUDIO LAB B3</strong><button data-act="close" style="margin-left:auto">關閉</button></div>
-  <p class="lab-muted">正式 V5.3.4 視覺基準 · 13 項各 5 款，共 65 個獨立音效候選 · 5 款循環背景音。收藏與正式站完全分開。</p>
+  <p class="lab-muted">已保存目前暫定設定。開場、蓄力、能量擴散各擴充為 10 款，共 80 個獨立音效候選；背景音樂保留 A、E 並新增 F–J，共 10 款。收藏與正式站完全分開。</p>
   <div class="lab-line"><button data-act="enable">啟用／恢復音訊</button><button data-act="stop">全部停止</button><button data-act="intro">重播開場</button></div>
   <div class="lab-line"><button data-act="normal">完整流程測試 N 包</button><button data-act="sr">完整流程測試含 SR 包</button></div>
   <div class="lab-line"><label><input type="checkbox" data-master-mute> 靜音</label><span>總音量</span><input data-master type="range" min="0" max="100"><output data-master-out></output></div>
@@ -182,9 +190,9 @@ document.body.append(launch,panel);statusEl=panel.querySelector('[data-status]')
 
 const rows=panel.querySelector('[data-rows]');
 for(const cue of CUES){
-  const c=cfg.cues[cue.id],details=document.createElement('details');details.innerHTML=`<summary>${cue.label} <small data-selected style="color:#bda9c8"></small></summary><div class="variants">${LETTERS.map((v,i)=>`<button data-variant="${v}" title="${cue.names[i]}">${v.toUpperCase()}</button>`).join('')}</div><div class="lab-muted" data-name></div><div class="lab-line"><label><input type="checkbox" data-on> 啟用</label><span>音量</span><input data-volume type="range" min="0" max="100"><output data-volume-out></output></div><div class="lab-line"><span>延後</span><input data-delay type="number" min="0" max="1000" step="10"><span>ms</span><span>速度</span><input data-rate type="number" min="0.7" max="1.35" step="0.05"></div>`;
+  const c=cfg.cues[cue.id],variants=variantsFor(cue),details=document.createElement('details');details.innerHTML=`<summary>${cue.label} <small data-selected style="color:#bda9c8"></small></summary><div class="variants">${variants.map((v,i)=>`<button data-variant="${v}" title="${cue.names[i]}">${v.toUpperCase()}</button>`).join('')}</div><div class="lab-muted" data-name></div><div class="lab-line"><label><input type="checkbox" data-on> 啟用</label><span>音量</span><input data-volume type="range" min="0" max="100"><output data-volume-out></output></div><div class="lab-line"><span>延後</span><input data-delay type="number" min="0" max="1000" step="10"><span>ms</span><span>速度</span><input data-rate type="number" min="0.7" max="1.35" step="0.05"></div>`;
   const selected=details.querySelector('[data-selected]'),name=details.querySelector('[data-name]'),buttons=[...details.querySelectorAll('[data-variant]')],on=details.querySelector('[data-on]'),volume=details.querySelector('[data-volume]'),volumeOut=details.querySelector('[data-volume-out]'),delay=details.querySelector('[data-delay]'),rate=details.querySelector('[data-rate]');
-  const render=()=>{buttons.forEach(b=>b.classList.toggle('active',b.dataset.variant===c.variant));const i=LETTERS.indexOf(c.variant);selected.textContent=`${c.variant.toUpperCase()} · ${cue.names[i]}`;name.textContent=`點 A–E 可立即切換並試聽：${cue.names.join('／')}`;on.checked=c.on;volume.value=c.volume;volumeOut.textContent=c.volume+'%';delay.value=c.delay;rate.value=c.rate};
+  const render=()=>{buttons.forEach(b=>b.classList.toggle('active',b.dataset.variant===c.variant));const i=variants.indexOf(c.variant);selected.textContent=`${c.variant.toUpperCase()} · ${cue.names[i]}`;name.textContent=`點 A–${variants.at(-1).toUpperCase()} 可立即切換並試聽：${cue.names.join('／')}`;on.checked=c.on;volume.value=c.volume;volumeOut.textContent=c.volume+'%';delay.value=c.delay;rate.value=c.rate};
   buttons.forEach(button=>button.onclick=async()=>{c.variant=button.dataset.variant;save();render();await audition(cue.id,c.variant)});on.onchange=()=>{c.on=on.checked;save()};volume.oninput=()=>{c.volume=Number(volume.value);volumeOut.textContent=c.volume+'%';save()};delay.onchange=()=>{c.delay=number(delay.value,0,1000,0);delay.value=c.delay;save()};rate.onchange=()=>{c.rate=number(rate.value,.7,1.35,1);rate.value=c.rate;save()};render();rows.append(details);
 }
 

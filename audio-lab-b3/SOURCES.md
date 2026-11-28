@@ -13,12 +13,12 @@
 | [Various Paper Sound Effects／Luckius](https://opengameart.org/content/various-paper-sound-effects) | CC0 1.0 | 真實紙張撕裂、翻面 |
 | [Card Game Sounds／HaelDB](https://opengameart.org/content/card-game-sounds) | CC0 1.0 | 蓄力、翻面、檢視、下一包 |
 | [RPG Sound Pack／artisticdude](https://opengameart.org/content/rpg-sound-pack) | CC0 1.0 | 布料、魔法擴散、氣流、金屬與細珠泛音 |
-| [150 Combat Sound Effects／untamedpixels](https://opengameart.org/content/150-combat-sound-effects) | CC0 1.0；封裝內 `LICENSES.txt` 逐來源列出 | 選用 Healing／Plant／Wind 類的柔和魔法候選；未使用爆炸與重擊分類 |
+| [150 Combat Sound Effects／untamedpixels](https://opengameart.org/content/150-combat-sound-effects) | CC0 1.0；封裝內 `LICENSES.txt` 逐來源列出 | 新增 F–J 使用 Healing／Plant／Water／Wind 類魔法候選；未使用爆炸與重擊分類 |
 | [Dark Shrine Loop／qubodup、yd](https://opengameart.org/content/dark-shrine-loop) | CC0 1.0 | BGM A |
 | [Cathedral in the Forest／congusbongus](https://opengameart.org/content/cathedral-in-the-forest-ambient-loop) | CC0 1.0 | BGM B |
 | [Ancient Caverns／congusbongus](https://opengameart.org/content/ancient-caverns-horror-ambient-loop) | CC0 1.0 | BGM C |
 | [Loopable Dungeon Ambience／JaggedStone](https://opengameart.org/content/loopable-dungeon-ambience) | CC0 1.0 | BGM D |
-| [FREE Music Loop Bundle／Abstraction, Tallbeard Studios](https://tallbeard.itch.io/music-loop-bundle) | CC0 1.0 | BGM E |
+| [FREE Music Loop Bundle／Abstraction, Tallbeard Studios](https://tallbeard.itch.io/music-loop-bundle) | CC0 1.0 | BGM E 與新增 F–J |
 
 Kenney 的[官方授權說明](https://kenney.nl/support)確認資產頁素材皆採 CC0，商用及修改均可，標示作者非必要。Tallbeard 素材的 CC0 授權允許本遊戲封裝；作者另表示不希望素材被拿去做 NFT、AI／機器學習或原檔轉售，本分支依其偏好只作遊戲內候選，不作上述用途。
 
