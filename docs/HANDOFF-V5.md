@@ -1,11 +1,14 @@
 # 封王卡牌 — V5.0 開發交接
 更新：2026-11-28
 
-## 現行穩定基準：V5.3.3 FINAL（使用者實際操作驗收完成）
-- 不可移動、覆寫或刪除 `baseline/v5.3.3-final`，保存完整快照 commit `ef605a170b9c32a0428c149979e6b1a483a3d9d2`。以本文末尾 V5.3.3 FINAL 章節為準。
-- 正式頁面識別資訊另經使用者授權更新：title 為「Draw! Duel Start! — Phoenixes: Internal Edition」；description 為「一款以封王日常為靈感的非官方二創卡牌收藏遊戲。開啟卡包、揭曉未知卡牌，完成你的專屬收藏。」；favicon 採左上角原始基礎 Logo，新增透明正方形 SVG（內嵌原 WebP）及原 WebP fallback。遊戲內版本 V5.3.3、INTERNAL EDITION、遊戲畫面、卡池及收藏均不變。
-- 正式 main 在識別資訊更新後與封存分支存在預期差異；不得因此覆寫舊基準。此更新僅 HTML metadata、favicon 新檔與交接文件；實際瀏覽器 favicon、最新完整回歸與效能測試仍待驗證。
-- 後續開發應保留上述識別資訊；不再要求 HTML title 包含版本號，頁尾版本號仍依實際程式版次管理。
+## 現行最完整成熟版：V5.3.3 FINAL COMPLETE（2026-11-28 使用者確認）
+- 使用者確認新版網站識別效果良好，指定目前版本為最完整成熟版；主要開發階段結束，後續僅做小改動與必要修正。不另更改遊戲內版本號 V5.3.3 或 INTERNAL EDITION。
+- 最新封存分支：`baseline/v5.3.3-final-complete`，應保留完整 repository snapshot，禁止覆寫、移動或刪除。已部署且使用者確認的程式快照 commit `92cc08272698ea523a10e38c5ed8aea06cfcb2fe`，index.html blob `4c6703b750ce7b7f1c7f1b25c50b98e47284a52c`；GitHub Pages workflow [46106719797](https://github.com/Phoenixes-Marketing/phoenixes-cards/actions/runs/46106719797) 已 success。本次封存紀錄僅改文件，不改程式或素材。
+- 原 `baseline/v5.3.3-final`（commit `ef605a170b9c32a0428c149979e6b1a483a3d9d2`）及所有歷史基準完整保留，不得移動。舊版 V5.3.3 FINAL 章節為歷史驗收依據；後續以本節最新完整版本為基準。
+- 網頁 title：「Draw! Duel Start! — Phoenixes: Internal Edition」；description：「一款以封王日常為靈感的非官方二創卡牌收藏遊戲。開啟卡包、揭曉未知卡牌，完成你的專屬收藏。」；favicon `assets/ui/phoenixes-favicon-v1.svg` 內嵌基礎款 Logo，原 WebP fallback 保留。網頁 title 不再附版本號。
+- 鎖定既有畫質、美術、開場、開包、卡牌出場與翻面、粒子、場景轉場、圖鑑、預覽縮放及所有抽卡收藏規則。任何後續小改動先確認範圍，再從本版比較，禁止無故重做或降畫質，保留 localStorage 收藏。每次程式更新獨立記錄及驗收；版本名稱 FINAL COMPLETE 僅用於封存紀錄。
+- 尚未完成的技術驗證：本版完整自動化回歸、最新幀時間/長時間記憶體量測、實體手機與 Safari 相容性；2K 輕微卡頓、神殿素材壓縮及分享 OG 圖為非阻斷的後續選項，不視為已承諾或必做。舊版測試數據不得冒稱本版實測；本次使用者接受不等於全平台驗證。
+- 下次接手先核對 main 與最新封存分支差異，閱讀本節及歷史 FINAL 章節；若沒有明確新需求或實際問題，不主動重構。正式更新需使用者當次授權。
 
 ## 歷史穩定基準：V5.2.5 FINAL（使用者實際操作驗收完成）
 - 使用者於 2026-11-28 確認 V5.2.5 效果很好，指定為新的穩定基準。當時後續修改從這版延續；現為歷史紀錄。
