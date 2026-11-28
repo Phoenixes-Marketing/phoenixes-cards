@@ -14,3 +14,14 @@ Freesound OGG copies sourced from https://github.com/Barty-Bart/motion-graphics/
 
 License: https://creativecommons.org/publicdomain/zero/1.0/
 No background music or ambient loop in this prototype. No impact/explosion samples selected.
+
+## B2 additions (2026-11-28)
+10 additional OGG copies, same blob hashes verified at transfer; license declared CC0 by original Kenney pack pages or by Freesound mirror LICENSES.md. Original Freesound individual pages not independently rechecked for this batch; verify before production. No subjective audition or browser testing yet.
+- Kenney RPG Audio: https://kenney.nl/assets/rpg-audio — page-open/page-close (bookOpen/bookClose).
+- Kenney Interface Sounds: https://kenney.nl/assets/interface-sounds — select-soft (select_002), glass (glass_001).
+- Kenney Casino Audio: https://kenney.nl/assets/casino-audio — card-fan/soft-fan (card-fan-1/2).
+- cabled_mess, Triangle open 04: https://freesound.org/people/cabled_mess/sounds/349504/ — triangle.
+- Diim_1: https://freesound.org/people/Diim_1/sounds/867126/ — soft-rise.
+- CVLTIV8R: https://freesound.org/people/CVLTIV8R/sounds/810485/ — air-pass.
+- LilMati: https://freesound.org/people/LilMati/sounds/702773/ — sweep.
+Mirrors same as B1. All B1 candidates preserved. B2 distinct default sound file for each of the 13 cues, button click off by default; no impact or explosion files. Lowpass, soft envelopes, small flight pitch/pan differences. Sound selection based on descriptions only.
