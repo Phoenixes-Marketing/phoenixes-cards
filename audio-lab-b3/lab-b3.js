@@ -48,8 +48,8 @@ function number(value,min,max,fallback){value=Number(value);return Number.isFini
 function save(){try{localStorage.setItem(KEY,JSON.stringify(cfg))}catch{}updateExport()}
 
 let ctx,master,sfxBus,bgmBus,limiter,statusEl,enablePromise;
-const buffers=new Map(),loading=new Map(),active=new Set(),activeByCue=new Map();
-let chargeSource=null,bgmSource=null,bgmOffset=0,bgmStarted=0,bgmWanted=cfg.bgm.on,hiddenPause=false,replayStop=null;
+const buffers=new Map(),loading=new Map(),active=new Set(),activeByCue=new Map(),reversedBuffers=new WeakMap();
+let chargeSource=null,chargeProgress=0,chargeDirection=0,chargeKey='',chargeLoadingKey='',chargeDelayTimer=0,chargeDelayReady=false,bgmSource=null,bgmOffset=0,bgmStarted=0,bgmWanted=cfg.bgm.on,hiddenPause=false,replayStop=null;
 
 function status(text){if(statusEl)statusEl.textContent=text}
 function setGains(){if(!ctx)return;master.gain.setTargetAtTime(cfg.muted?0:cfg.master/100,ctx.currentTime,.025);bgmBus.gain.setTargetAtTime(cfg.bgm.volume/100*.42,ctx.currentTime,.08)}
@@ -90,9 +90,10 @@ function forget(node){active.delete(node);const list=activeByCue.get(node.cue);i
 function stopNode(node,fade=.04){
   if(!ctx||node.stopped)return;node.stopped=true;const now=ctx.currentTime;
   try{node.gain.gain.cancelScheduledValues(now);node.gain.gain.setTargetAtTime(.0001,now,Math.max(.005,fade/3));node.source.stop(now+fade)}catch{}
+  if(node===chargeSource)chargeSource=null;
 }
 function stopCue(id){for(const node of activeByCue.get(id)||[])stopNode(node)}
-function stopSfx(){for(const node of [...active])stopNode(node,.025);chargeSource=null}
+function stopSfx(){for(const node of [...active])stopNode(node,.025);clearTimeout(chargeDelayTimer);chargeDelayTimer=0;chargeDelayReady=false;chargeSource=null;chargeProgress=0;chargeDirection=0;chargeKey=''}
 
 async function emit(id,delay=0,pan=0,preview=false,variantOverride=null){
   const cue=cfg.cues[id];if(!cue||(!cue.on&&!preview))return false;
@@ -107,12 +108,39 @@ async function emit(id,delay=0,pan=0,preview=false,variantOverride=null){
   const at=ctx.currentTime+Math.max(0,(delay+cue.delay)/1000),volume=(preview?Math.max(cue.volume,28):cue.volume)/100;
   gain.gain.setValueAtTime(.0001,at);gain.gain.linearRampToValueAtTime(volume,at+Math.min(.035,buffer.duration*.12));gain.gain.setValueAtTime(volume,at+Math.max(.04,buffer.duration-.07));gain.gain.linearRampToValueAtTime(.0001,at+buffer.duration);
   const node={source,gain,cue:id,stopped:false};active.add(node);if(!activeByCue.has(id))activeByCue.set(id,new Set());activeByCue.get(id).add(node);source.onended=()=>forget(node);source.start(at);
-  if(id==='charge')chargeSource=node;
   return true;
 }
-function charge(progress){if(progress>.04&&!chargeSource)emit('charge');if(progress<.015&&chargeSource){stopNode(chargeSource);chargeSource=null}}
-function endCharge(){if(chargeSource){stopNode(chargeSource,.08);chargeSource=null}}
-window.labAudio={emit,charge,endCharge};
+function reversedBuffer(buffer){
+  if(reversedBuffers.has(buffer))return reversedBuffers.get(buffer);
+  const copy=ctx.createBuffer(buffer.numberOfChannels,buffer.length,buffer.sampleRate);
+  for(let channel=0;channel<buffer.numberOfChannels;channel++){const input=buffer.getChannelData(channel),output=copy.getChannelData(channel);for(let i=0,j=input.length-1;i<input.length;i++,j--)output[i]=input[j]}
+  reversedBuffers.set(buffer,copy);return copy;
+}
+function shapeCharge(node,progress,direction){
+  const cue=cfg.cues.charge,now=ctx.currentTime,p=Math.max(0,Math.min(1,progress));
+  const volume=cue.volume/100*(.12+.88*Math.pow(p,.72)),rate=cue.rate*(direction<0?.38+.48*p:.65+.85*p),brightness=500+12500*Math.pow(p,1.45);
+  node.gain.gain.setTargetAtTime(volume,now,.025);node.source.playbackRate.setTargetAtTime(rate,now,.025);node.filter.frequency.setTargetAtTime(brightness,now,.035);
+}
+function startCharge(buffer,key,progress,direction){
+  if(chargeSource)stopNode(chargeSource,.035);stopCue('charge');
+  const reverse=direction<0,source=ctx.createBufferSource(),gain=ctx.createGain(),filter=ctx.createBiquadFilter(),playback=reverse?reversedBuffer(buffer):buffer;
+  source.buffer=playback;source.loop=true;filter.type='lowpass';source.connect(filter);filter.connect(gain);gain.connect(sfxBus);
+  const node={source,gain,filter,cue:'charge',direction,stopped:false};chargeSource=node;chargeKey=key;active.add(node);if(!activeByCue.has('charge'))activeByCue.set('charge',new Set());activeByCue.get('charge').add(node);source.onended=()=>forget(node);
+  gain.gain.setValueAtTime(.0001,ctx.currentTime);filter.frequency.setValueAtTime(500,ctx.currentTime);
+  shapeCharge(node,progress,direction);source.start(0,Math.max(0,Math.min(playback.duration-.01,(reverse?1-progress:progress)*playback.duration)));
+}
+function charge(progress){
+  const cue=cfg.cues.charge,p=Math.max(0,Math.min(1,Number(progress)||0)),delta=p-chargeProgress;
+  if(delta>.003)chargeDirection=1;else if(delta<-.003)chargeDirection=-1;chargeProgress=p;
+  if(p<.015||!cue.on||!ctx||ctx.state!=='running'){if(chargeSource)stopNode(chargeSource,.055);if(p<.015){clearTimeout(chargeDelayTimer);chargeDelayTimer=0;chargeDelayReady=false;chargeProgress=0;chargeDirection=0;chargeKey=''}return}
+  if(!chargeSource&&cue.delay>0&&!chargeDelayReady){if(!chargeDelayTimer)chargeDelayTimer=setTimeout(()=>{chargeDelayTimer=0;chargeDelayReady=true;charge(chargeProgress)},cue.delay);return}
+  const key=`sfx:charge:${cue.variant}`,buffer=buffers.get(key),direction=chargeDirection||1;
+  if(!buffer){if(chargeLoadingKey!==key){chargeLoadingKey=key;load(key,sfxUrl('charge',cue.variant)).then(loaded=>{if(chargeProgress>=.015&&cfg.cues.charge.on&&key===`sfx:charge:${cfg.cues.charge.variant}`)startCharge(loaded,key,chargeProgress,chargeDirection||1)}).catch(error=>status(`載入互動蓄力音效失敗：${error.message}`)).finally(()=>{if(chargeLoadingKey===key)chargeLoadingKey=''})}return}
+  if(!chargeSource||chargeSource.direction!==direction||chargeKey!==key)startCharge(buffer,key,p,direction);else shapeCharge(chargeSource,p,direction);
+}
+function endCharge(){clearTimeout(chargeDelayTimer);chargeDelayTimer=0;chargeDelayReady=false;if(chargeSource)stopNode(chargeSource,.08);chargeSource=null;chargeProgress=0;chargeDirection=0;chargeKey=''}
+function chargeDebug(){return {active:!!chargeSource&&!chargeSource.stopped,progress:chargeProgress,direction:chargeDirection,looping:!!chargeSource?.source.loop,rate:chargeSource?.source.playbackRate.value||0,gain:chargeSource?.gain.gain.value||0,frequency:chargeSource?.filter.frequency.value||0}}
+window.labAudio={emit,charge,endCharge,debug:chargeDebug};
 
 async function audition(id,variant){
   if(!await enable())return;
@@ -178,7 +206,7 @@ const launch=document.createElement('button');launch.id='audio-lab-b3-launch';la
 const panel=document.createElement('aside');panel.id='audio-lab-b3-panel';panel.hidden=true;panel.setAttribute('aria-label','V5.4 Audio Lab B3 設定');
 panel.innerHTML=`
   <div class="lab-line"><strong style="color:#e6c99b;font-size:17px">V5.4 AUDIO LAB B3</strong><button data-act="close" style="margin-left:auto">關閉</button></div>
-  <p class="lab-muted">已保存目前暫定設定。開場、蓄力、能量擴散各擴充為 10 款，共 80 個獨立音效候選；背景音樂保留 A、E 並新增 F–J，共 10 款。收藏與正式站完全分開。</p>
+  <p class="lab-muted">已保存目前暫定設定。蓄力音效會跟著拉動百分比升降，拉住時持續，退回時反向；開場、蓄力、能量擴散各有 10 款候選。收藏與正式站完全分開。</p>
   <div class="lab-line"><button data-act="enable">啟用／恢復音訊</button><button data-act="stop">全部停止</button><button data-act="intro">重播開場</button></div>
   <div class="lab-line"><button data-act="normal">完整流程測試 N 包</button><button data-act="sr">完整流程測試含 SR 包</button></div>
   <div class="lab-line"><label><input type="checkbox" data-master-mute> 靜音</label><span>總音量</span><input data-master type="range" min="0" max="100"><output data-master-out></output></div>

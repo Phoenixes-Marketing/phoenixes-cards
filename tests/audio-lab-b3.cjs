@@ -43,6 +43,15 @@ async function testDesktop(page){
     const durations=[];for(const file of urls){const response=await fetch(file);if(!response.ok)throw new Error(`${file} ${response.status}`);const buffer=await ctx.decodeAudioData(await response.arrayBuffer());durations.push(buffer.duration)}await ctx.close();return {count:durations.length,min:Math.min(...durations),max:Math.max(...durations)};
   });
   assert.equal(decoded.count,90);assert(decoded.min>0);assert(decoded.max>50);
+  await panel.getByRole('button',{name:'關閉',exact:true}).click();
+  const pack=page.locator('#pack'),packBox=await pack.boundingBox();assert(packBox);
+  const startX=packBox.x+packBox.width/2,startY=packBox.y+packBox.height*.72;
+  await page.mouse.move(startX,startY);await page.mouse.down();await page.mouse.move(startX,startY-135,{steps:12});await page.waitForTimeout(180);
+  const held=await page.evaluate(()=>window.labAudio.debug());assert(held.active);assert(held.looping);assert.equal(held.direction,1);assert(held.progress>.25&&held.progress<.8);assert(held.rate>0);assert(held.gain>0);assert(held.frequency>500);
+  await page.waitForTimeout(320);const stillHeld=await page.evaluate(()=>window.labAudio.debug());assert(stillHeld.active);assert(Math.abs(stillHeld.progress-held.progress)<.01);
+  await page.mouse.up();await page.waitForTimeout(100);const retreating=await page.evaluate(()=>window.labAudio.debug());assert(retreating.active);assert.equal(retreating.direction,-1);assert(retreating.progress<held.progress);
+  await page.waitForFunction(()=>window.phoenixesPackProgress===0&&!window.labAudio.debug().active);const released=await page.evaluate(()=>window.labAudio.debug());assert.equal(released.progress,0);assert.equal(released.direction,0);
+  await openPanel(page);
   await page.screenshot({path:path.join(output,'desktop-panel.png'),fullPage:true});
 
   await panel.getByRole('button',{name:'重播開場',exact:true}).click();
@@ -55,8 +64,9 @@ async function testDesktop(page){
 
   const before=await page.evaluate(()=>({formal:localStorage.getItem('phoenixes-portable'),b1:localStorage.getItem('phoenixes-audio-lab-portable'),b2:localStorage.getItem('phoenixes-audio-lab-v2-portable'),b3:localStorage.getItem('phoenixes-audio-lab-b3-portable')}));
   await openPanel(page);await page.getByRole('button',{name:'完整流程測試 N 包',exact:true}).click();await page.waitForTimeout(400);
-  const during=await page.evaluate(()=>({progress:window.phoenixesPackProgress,gesture:document.getElementById('stage').classList.contains('gesture-active')}));assert(during.progress>0&&during.progress<1);assert(during.gesture);
+  const during=await page.evaluate(()=>({progress:window.phoenixesPackProgress,gesture:document.getElementById('stage').classList.contains('gesture-active'),charge:window.labAudio.debug()}));assert(during.progress>0&&during.progress<1);assert(during.gesture);assert(during.charge.active);assert.equal(during.charge.direction,1);
   await page.waitForFunction(()=>state==='reveal',{timeout:12000});assert(await page.evaluate(()=>draw.every(card=>card.rank==='N')));
+  const completedCharge=await page.evaluate(()=>window.labAudio.debug());assert.equal(completedCharge.active,false);assert.equal(completedCharge.progress,0);
   const nMetrics=await page.evaluate(()=>window.phoenixesOpeningMetrics);assert(nMetrics.durationMs>2000);assert(nMetrics.frames>30);
   await page.screenshot({path:path.join(output,'desktop-normal-pack.png'),fullPage:true});
   await page.evaluate(async()=>{await revealAll();await arrival()});
@@ -76,6 +86,10 @@ async function testMobile(page){
   const box=await panel.boundingBox();assert(box.x>=0&&box.x+box.width<=390);assert(box.y>=0&&box.y+box.height<=844);
   await panel.locator('[data-bgm-select]').selectOption('f');await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('背景音樂播放中'));await panel.locator('details').first().click();await panel.locator('[data-variant="j"]').first().click();await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('INTRO-J'));
   await page.screenshot({path:path.join(output,'mobile-panel.png'),fullPage:true});
+  await panel.getByRole('button',{name:'關閉',exact:true}).click();const packBox=await page.locator('#pack').boundingBox();assert(packBox);const x=packBox.x+packBox.width/2,y=packBox.y+packBox.height*.72,cdp=await page.context().newCDPSession(page);
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y,id:1}]});for(let i=1;i<=10;i++){await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x,y:y-13.5*i,id:1}]});await page.waitForTimeout(16)}await page.waitForTimeout(180);
+  const held=await page.evaluate(()=>window.labAudio.debug());assert(held.active);assert.equal(held.direction,1);assert(held.progress>.25&&held.progress<.8);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(100);
+  const retreating=await page.evaluate(()=>window.labAudio.debug());assert(retreating.active);assert.equal(retreating.direction,-1);assert(retreating.progress<held.progress);await page.waitForFunction(()=>window.phoenixesPackProgress===0&&!window.labAudio.debug().active);
   return {panel:{x:Math.round(box.x),y:Math.round(box.y),width:Math.round(box.width),height:Math.round(box.height)}};
 }
 
